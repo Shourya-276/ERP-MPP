@@ -24,28 +24,28 @@ const Dashboard: React.FC = () => {
       <div className="flex">
         <DashboardSidebar />
         
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-5 overflow-auto">
           {/* Top section: Greeting + Calendar */}
-          <div className="flex gap-6 mb-8">
+          <div className="flex gap-4 mb-5">
             <GreetingCard />
             <CalendarWidget />
           </div>
 
           {/* Lead Overview */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <h2 className="text-xl font-semibold text-foreground">Your Lead Overview</h2>
-                <p className="text-sm text-muted-foreground">Showing data for the last 30 days</p>
+                <h2 className="text-lg font-semibold text-foreground">Your Lead Overview</h2>
+                <p className="text-xs text-muted-foreground">Showing data for the last 30 days</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90">
+              <div className="flex items-center gap-1">
+                <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90 h-8 px-4 text-xs">
                   Today
                 </Button>
-                <Button variant="ghost" size="sm">This Month</Button>
-                <Button variant="ghost" size="sm">Nov</Button>
-                <Button variant="ghost" size="sm">Oct</Button>
-                <Button variant="ghost" size="sm">Sep</Button>
+                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">This Month</Button>
+                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">Nov</Button>
+                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">Oct</Button>
+                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">Sep</Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <Calendar className="h-4 w-4" />
                 </Button>

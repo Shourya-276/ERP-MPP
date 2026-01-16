@@ -38,7 +38,7 @@ const CalendarWidget: React.FC = () => {
     
     // Empty cells for days before the first day of month
     for (let i = 0; i < startingDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-8 w-8" />);
+      days.push(<div key={`empty-${i}`} className="h-7 w-7" />);
     }
     
     // Days of the month
@@ -47,7 +47,7 @@ const CalendarWidget: React.FC = () => {
       days.push(
         <button
           key={day}
-          className={`h-8 w-8 rounded-full text-sm flex items-center justify-center transition-colors ${
+          className={`h-7 w-7 rounded-full text-xs flex items-center justify-center transition-colors ${
             isToday
               ? 'bg-primary text-primary-foreground font-medium'
               : 'hover:bg-muted text-foreground'
@@ -63,43 +63,43 @@ const CalendarWidget: React.FC = () => {
 
   return (
     <div 
-      className="bg-white rounded-2xl p-4 shadow-sm border"
-      style={{ width: '336px', height: '342px' }}
+      className="bg-white rounded-2xl p-3 shadow-sm border flex-shrink-0"
+      style={{ width: '280px' }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 bg-primary rounded-lg px-4 py-2">
+      <div className="flex items-center justify-between mb-3 bg-primary rounded-lg px-3 py-2">
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={prevMonth}
-          className="text-primary-foreground hover:bg-white/10 h-8 w-8"
+          className="text-primary-foreground hover:bg-white/10 h-6 w-6"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <span className="font-semibold text-primary-foreground">
+        <span className="font-semibold text-primary-foreground text-sm">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </span>
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={nextMonth}
-          className="text-primary-foreground hover:bg-white/10 h-8 w-8"
+          className="text-primary-foreground hover:bg-white/10 h-6 w-6"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Days of week */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
+      <div className="grid grid-cols-7 gap-0.5 mb-1">
         {daysOfWeek.map((day) => (
-          <div key={day} className="h-8 w-8 flex items-center justify-center text-xs text-muted-foreground font-medium">
+          <div key={day} className="h-7 w-7 flex items-center justify-center text-[10px] text-muted-foreground font-medium">
             {day}
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5">
         {renderDays()}
       </div>
     </div>

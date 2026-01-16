@@ -4,21 +4,21 @@ import saraIllustration from '@/assets/sara-illustration.png';
 const GreetingCard: React.FC = () => {
   return (
     <div 
-      className="greeting-gradient rounded-3xl p-6 relative overflow-hidden"
-      style={{ width: '750px', height: '230px' }}
+      className="greeting-gradient rounded-3xl p-5 relative overflow-hidden flex-1"
+      style={{ minWidth: '500px', height: '200px' }}
     >
       <div className="relative z-10">
-        <span className="inline-flex items-center gap-1 bg-white/80 text-sm px-3 py-1 rounded-full mb-3">
-          👋 Welcome Back
+        <span className="inline-flex items-center gap-1.5 bg-white/80 text-xs px-3 py-1 rounded-full mb-2">
+          ✨ Welcome Back
         </span>
         <h2 className="text-2xl font-bold text-foreground mb-2">Good Morning, Sara!</h2>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-sm">You have</span>
-          <span className="bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
+          <span className="bg-primary text-primary-foreground text-xs px-2.5 py-0.5 rounded-full font-medium">
             7 new leads
           </span>
           <span className="text-sm">and</span>
-          <span className="bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
+          <span className="bg-primary text-primary-foreground text-xs px-2.5 py-0.5 rounded-full font-medium">
             5 notifications
           </span>
         </div>
@@ -26,11 +26,11 @@ const GreetingCard: React.FC = () => {
       </div>
       
       {/* Sara illustration */}
-      <div className="absolute right-4 bottom-0 h-full flex items-end">
+      <div className="absolute right-2 bottom-0 h-full flex items-end">
         <img 
           src={saraIllustration} 
           alt="Sara" 
-          className="h-[200px] object-contain"
+          className="h-[180px] object-contain"
         />
       </div>
     </div>

@@ -23,10 +23,10 @@ const DashboardSidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-[120px] bg-megaplex-purple-light min-h-[calc(100vh-64px)] flex flex-col py-6">
+    <aside className="w-[180px] bg-megaplex-purple-light min-h-[calc(100vh-64px)] flex flex-col py-4">
       {/* Main Menu */}
-      <div className="px-4 mb-6">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+      <div className="px-4 mb-3">
+        <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
           Main Menu
         </span>
       </div>
@@ -37,21 +37,21 @@ const DashboardSidebar: React.FC = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex flex-col items-center gap-2 py-3 px-2 transition-colors ${
+              className={`w-full flex items-center gap-3 py-2.5 px-4 transition-colors ${
                 isActive
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-primary-foreground rounded-lg mx-2 w-[calc(100%-16px)]'
                   : 'text-foreground hover:bg-sidebar-accent'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{item.label}</span>
+              <item.icon className="w-4 h-4" />
+              <span className="text-sm font-medium">{item.label}</span>
             </button>
           );
         })}
 
         {/* Others section */}
-        <div className="px-4 mt-8 mb-4">
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        <div className="px-4 mt-6 mb-3">
+          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
             Others
           </span>
         </div>
@@ -62,14 +62,14 @@ const DashboardSidebar: React.FC = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex flex-col items-center gap-2 py-3 px-2 transition-colors ${
+              className={`w-full flex items-center gap-3 py-2.5 px-4 transition-colors ${
                 isActive
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-primary-foreground rounded-lg mx-2 w-[calc(100%-16px)]'
                   : 'text-foreground hover:bg-sidebar-accent'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{item.label}</span>
+              <item.icon className="w-4 h-4" />
+              <span className="text-sm font-medium">{item.label}</span>
             </button>
           );
         })}
@@ -77,10 +77,10 @@ const DashboardSidebar: React.FC = () => {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="w-full flex flex-col items-center gap-2 py-3 px-2 text-red-500 hover:bg-red-50 transition-colors mt-2"
+          className="w-full flex items-center gap-3 py-2.5 px-4 text-red-500 hover:bg-red-50 transition-colors mt-2"
         >
-          <LogOut className="w-5 h-5" />
-          <span className="text-xs font-medium">Logout</span>
+          <LogOut className="w-4 h-4" />
+          <span className="text-sm font-medium">Logout</span>
         </button>
       </nav>
     </aside>
