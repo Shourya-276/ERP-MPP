@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import SignatureCanvas from 'react-signature-canvas';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Trash2, X } from 'lucide-react';
 
 interface FeedbackStepProps {
     onNext: () => void;
@@ -11,6 +14,9 @@ interface FeedbackStepProps {
 const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack }) => {
     const [selectedSources, setSelectedSources] = useState<string[]>([]);
     const [showChannelPartner, setShowChannelPartner] = useState(false);
+    const [isSignatureOpen, setIsSignatureOpen] = useState(false);
+    const [signature, setSignature] = useState<string | null>(null);
+    const sigCanvas = useRef<SignatureCanvas>(null);
 
     const toggleSource = (source: string) => {
         if (selectedSources.includes(source)) {
@@ -18,6 +24,25 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack }) => {
         } else {
             setSelectedSources(prev => [...prev, source]);
         }
+    };
+
+    const clearSignature = () => {
+        sigCanvas.current?.clear();
+    };
+
+    const saveSignature = (e?: React.MouseEvent) => {
+        e?.preventDefault();
+        try {
+            if (sigCanvas.current) {
+                // Use getCanvas() instead of getTrimmedCanvas() to ensure capturing
+                // even if trimming logic is failing or aggressive
+                const dataUrl = sigCanvas.current.getCanvas().toDataURL('image/png');
+                setSignature(dataUrl);
+            }
+        } catch (error) {
+            console.error("Error saving signature:", error);
+        }
+        setIsSignatureOpen(false);
     };
 
     const CheckboxOption = ({ label }: { label: string }) => {
@@ -140,11 +165,63 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack }) => {
             <div className="flex justify-end">
                 <div className="w-64 space-y-2">
                     <label className="text-xs font-bold text-[#4A1D59]">Signature</label>
-                    <div className="h-24 bg-[#FAFAFA] border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs cursor-pointer hover:bg-gray-50">
-                        Tap to sign
-                    </div>
+
+                    {!signature ? (
+                        <div
+                            onClick={() => setIsSignatureOpen(true)}
+                            className="h-24 bg-[#FAFAFA] border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs cursor-pointer hover:bg-gray-50 transition-colors"
+                        >
+                            Tap to sign
+                        </div>
+                    ) : (
+                        <div className="relative h-24 bg-white border border-gray-200 rounded-lg overflow-hidden group">
+                            <img
+                                src={signature}
+                                alt="Signature"
+                                className="w-full h-full object-contain cursor-default"
+                            />
+                            <button
+                                onClick={() => setSignature(null)}
+                                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm"
+                                title="Remove Signature"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Signature Modal */}
+            <Dialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Sign Here</DialogTitle>
+                    </DialogHeader>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+                        <SignatureCanvas
+                            ref={sigCanvas}
+                            penColor="black"
+                            canvasProps={{
+                                width: 440,
+                                height: 200,
+                                className: 'cursor-crosshair'
+                            }}
+                            backgroundColor="white"
+                        />
+                    </div>
+                    <DialogFooter className="flex justify-between sm:justify-between items-center w-full">
+                        <Button type="button" variant="ghost" size="sm" onClick={clearSignature} className="text-red-500 hover:text-red-600 hover:bg-red-50">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Clear
+                        </Button>
+                        <div className="flex gap-2">
+                            <Button type="button" variant="outline" onClick={() => setIsSignatureOpen(false)}>Cancel</Button>
+                            <Button type="button" onClick={saveSignature} className="bg-[#4A1D59] hover:bg-[#3d184a] text-white">Save Signature</Button>
+                        </div>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
 
             {/* Footer Actions */}

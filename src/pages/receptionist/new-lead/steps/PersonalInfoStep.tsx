@@ -1,16 +1,61 @@
-import React from 'react';
-import { Camera } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Camera, X, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-// Using standard HTML input for date as shadcn calendar might be too big for this specific inline layout, 
-// or I can Use Popover+Calendar if needed. Image shows "DD-MM-YYYY" text input style.
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface PersonalInfoStepProps {
     onNext: () => void;
 }
 
 const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext }) => {
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [photo, setPhoto] = useState<string | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const startCamera = async () => {
+        setIsCameraOpen(true);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+            setIsCameraOpen(false);
+        }
+    };
+
+    const stopCamera = () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
+        setIsCameraOpen(false);
+    };
+
+    const takePhoto = () => {
+        if (videoRef.current && canvasRef.current) {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+            if (context) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataUrl = canvas.toDataURL('image/png');
+                setPhoto(dataUrl);
+                stopCamera();
+            }
+        }
+    };
+
+    const removePhoto = () => {
+        setPhoto(null);
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="text-center mb-6">
@@ -26,11 +71,44 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext }) => {
                 </div>
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-[#4A1D59]">Photo<span className="text-red-500">*</span></label>
-                    <div className="border hover:bg-gray-50 transition cursor-pointer border-dashed border-gray-300 rounded-lg h-10 flex items-center justify-center gap-2 text-sm text-gray-500">
-                        <Camera className="w-4 h-4" />
-                        Take a photo
-                    </div>
+
+                    {!photo ? (
+                        <div
+                            onClick={startCamera}
+                            className="border hover:bg-gray-50 transition cursor-pointer border-dashed border-gray-300 rounded-lg h-10 flex items-center justify-center gap-2 text-sm text-gray-500"
+                        >
+                            <Camera className="w-4 h-4" />
+                            Take a photo
+                        </div>
+                    ) : (
+                        <div className="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 group">
+                            <img src={photo} alt="Captured" className="w-full h-full object-cover" />
+                            <button
+                                onClick={removePhoto}
+                                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                    )}
                 </div>
+
+                {/* Camera Modal */}
+                <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
+                    <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-black border-none text-white">
+                        <div className="relative aspect-video bg-black flex items-center justify-center">
+                            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                            <canvas ref={canvasRef} className="hidden" />
+                        </div>
+                        <div className="p-4 flex justify-between items-center bg-zinc-900">
+                            <Button variant="ghost" onClick={stopCamera} className="text-gray-400 hover:text-white">Cancel</Button>
+                            <Button onClick={takePhoto} className="rounded-full w-12 h-12 p-0 border-4 border-white bg-transparent hover:bg-white/20 transition-all">
+                                <div className="w-8 h-8 bg-red-500 rounded-full" />
+                            </Button>
+                            <div className="w-16" /> {/* Spacer */}
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
                 {/* Row 2: Name */}
                 <div className="md:col-span-2 grid grid-cols-12 gap-4">
