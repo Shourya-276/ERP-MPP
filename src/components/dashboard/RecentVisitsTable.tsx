@@ -42,13 +42,13 @@ const RecentVisitsTable: React.FC = () => {
   const [filters, setFilters] = useState({ status: 'All', assignStatus: 'All' });
 
   const filteredVisits = visits.filter((visit) => {
-    const matchesSearch = 
+    const matchesSearch =
       visit.uniqueId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       visit.customerName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = 
+
+    const matchesStatus =
       filters.status === 'All' || visit.purpose === filters.status;
-    
+
     const matchesAssignStatus =
       filters.assignStatus === 'All' ||
       (filters.assignStatus === 'Assigned' && visit.status === 'Assigned') ||
@@ -58,8 +58,8 @@ const RecentVisitsTable: React.FC = () => {
   });
 
   const handleAssign = (visitId: string, executive: string) => {
-    setVisits(prev => prev.map(v => 
-      v.id === visitId 
+    setVisits(prev => prev.map(v =>
+      v.id === visitId
         ? { ...v, status: 'Assigned' as const, assignedTo: executive }
         : v
     ));
@@ -106,17 +106,17 @@ const RecentVisitsTable: React.FC = () => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-foreground">Recent Visits</h3>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="gap-2 h-8"
             onClick={() => setFilterPopup(true)}
           >
             <Filter className="w-4 h-4" />
             Filter
           </Button>
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             className="gap-2 bg-primary hover:bg-primary/90 h-8"
             onClick={downloadExcel}
           >
@@ -183,7 +183,7 @@ const RecentVisitsTable: React.FC = () => {
                 </td>
                 <td>
                   {visit.status === 'Assigned' && visit.assignedTo ? (
-                    <div className="text-xs text-right">
+                    <div className="text-xs text-left">
                       <span className="text-muted-foreground">Assigned to</span>
                       <br />
                       <span className="font-medium text-foreground">{visit.assignedTo}</span>
@@ -191,8 +191,8 @@ const RecentVisitsTable: React.FC = () => {
                   ) : (
                     <Button
                       size="sm"
-                      onClick={() => setAssignPopup({ 
-                        isOpen: true, 
+                      onClick={() => setAssignPopup({
+                        isOpen: true,
                         visitId: visit.id,
                         customer: { name: visit.customerName, id: visit.uniqueId }
                       })}

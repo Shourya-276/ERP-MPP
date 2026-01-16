@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Tablet, label: 'iPad View', path: '/ipad-view' },
+  { icon: Tablet, label: 'Reception Desk', path: '/receptionist' },
 ];
 
 const otherItems = [
@@ -23,7 +23,7 @@ const DashboardSidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-[180px] bg-megaplex-purple-light min-h-[calc(100vh-64px)] flex flex-col py-4">
+    <aside className="w-[205px] bg-megaplex-purple-light min-h-[calc(100vh-64px)] flex flex-col py-4">
       {/* Main Menu */}
       <div className="px-4 mb-3">
         <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
@@ -37,13 +37,12 @@ const DashboardSidebar: React.FC = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 py-2.5 px-4 transition-colors ${
-                isActive
-                  ? 'bg-primary text-primary-foreground rounded-lg mx-2 w-[calc(100%-16px)]'
-                  : 'text-foreground hover:bg-sidebar-accent'
-              }`}
+              className={`w-full flex items-center gap-3 py-3 px-6 transition-all mx-auto mb-1 ${isActive
+                ? 'bg-[#E6D5F0] text-[#4A1D59] font-bold rounded-[30px] w-[189px]'
+                : 'text-foreground hover:bg-black/5 rounded-[30px] w-[189px]'
+                }`}
             >
-              <item.icon className="w-4 h-4" />
+              <item.icon className="w-5 h-5" />
               <span className="text-sm font-medium">{item.label}</span>
             </button>
           );
@@ -62,11 +61,10 @@ const DashboardSidebar: React.FC = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 py-2.5 px-4 transition-colors ${
-                isActive
-                  ? 'bg-primary text-primary-foreground rounded-lg mx-2 w-[calc(100%-16px)]'
-                  : 'text-foreground hover:bg-sidebar-accent'
-              }`}
+              className={`w-full flex items-center gap-3 py-3 px-6 transition-all mx-auto mb-1 ${isActive
+                ? 'bg-[#E6D5F0] text-[#4A1D59] font-bold rounded-[30px] w-[189px]'
+                : 'text-foreground hover:bg-black/5 rounded-[30px] w-[189px]'
+                }`}
             >
               <item.icon className="w-4 h-4" />
               <span className="text-sm font-medium">{item.label}</span>
@@ -77,9 +75,9 @@ const DashboardSidebar: React.FC = () => {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 py-2.5 px-4 text-red-500 hover:bg-red-50 transition-colors mt-2"
+          className="w-[189px] flex items-center gap-3 py-3 px-6 text-red-500 hover:bg-black/5 transition-colors mx-auto mb-1 rounded-[30px]"
         >
-          <LogOut className="w-4 h-4" />
+          <LogOut className="w-5 h-5" />
           <span className="text-sm font-medium">Logout</span>
         </button>
       </nav>
