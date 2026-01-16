@@ -38,20 +38,19 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, trend, vari
 
   return (
     <div 
-      className={`stat-${variant} rounded-2xl p-4 border border-transparent`}
-      style={{ width: '267px', height: '129px' }}
+      className={`stat-${variant} rounded-2xl p-4 border border-transparent flex-1 min-w-[200px]`}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-2">
         <div>
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
         </div>
-        <div className={`w-10 h-10 rounded-xl ${iconBgMap[variant]} flex items-center justify-center`}>
-          <Icon className={`w-5 h-5 ${iconColorMap[variant]}`} />
+        <div className={`w-9 h-9 rounded-xl ${iconBgMap[variant]} flex items-center justify-center`}>
+          <Icon className={`w-4 h-4 ${iconColorMap[variant]}`} />
         </div>
       </div>
       
       <div className="flex items-end gap-2">
-        <span className="text-3xl font-bold text-foreground">{value}</span>
+        <span className="text-2xl font-bold text-foreground">{value}</span>
         {trend && (
           <span className={`flex items-center gap-0.5 text-xs font-medium ${
             trend.isPositive ? 'text-green-500' : 'text-red-500'
@@ -65,14 +64,14 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, trend, vari
           </span>
         )}
       </div>
-      <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+      {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
     </div>
   );
 };
 
 const StatCards: React.FC = () => {
   return (
-    <div className="flex gap-4 flex-wrap">
+    <div className="flex gap-4">
       <StatCard
         title="Visit Line-up"
         value={27}

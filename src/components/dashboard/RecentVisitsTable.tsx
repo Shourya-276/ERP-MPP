@@ -33,8 +33,9 @@ const mockData: Visit[] = [
 const RecentVisitsTable: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [visits, setVisits] = useState<Visit[]>(mockData);
-  const [assignPopup, setAssignPopup] = useState<{ isOpen: boolean; customer: { name: string; id: string } | null }>({
+  const [assignPopup, setAssignPopup] = useState<{ isOpen: boolean; visitId: string | null; customer: { name: string; id: string } | null }>({
     isOpen: false,
+    visitId: null,
     customer: null,
   });
   const [filterPopup, setFilterPopup] = useState(false);
@@ -100,15 +101,15 @@ const RecentVisitsTable: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border p-6">
+    <div className="bg-white rounded-2xl border p-5">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-foreground">Recent Visits</h3>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-2"
+            className="gap-2 h-8"
             onClick={() => setFilterPopup(true)}
           >
             <Filter className="w-4 h-4" />
@@ -116,7 +117,7 @@ const RecentVisitsTable: React.FC = () => {
           </Button>
           <Button 
             size="sm" 
-            className="gap-2 bg-primary hover:bg-primary/90"
+            className="gap-2 bg-primary hover:bg-primary/90 h-8"
             onClick={downloadExcel}
           >
             <Download className="w-4 h-4" />
@@ -126,14 +127,14 @@ const RecentVisitsTable: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search by Unique ID or Customer Name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-10 h-9"
         />
       </div>
 
@@ -142,68 +143,64 @@ const RecentVisitsTable: React.FC = () => {
         <table className="data-table w-full">
           <thead>
             <tr className="border-b">
-              <th>Unique ID</th>
-              <th>Customer Name</th>
-              <th>Contact</th>
-              <th>Source</th>
-              <th>Purpose</th>
-              <th>Scheduled Date</th>
-              <th>Status</th>
-              <th>Print</th>
-              <th>Action</th>
+              <th className="text-xs">Unique ID</th>
+              <th className="text-xs">Customer Name</th>
+              <th className="text-xs">Contact</th>
+              <th className="text-xs">Source</th>
+              <th className="text-xs">Purpose</th>
+              <th className="text-xs">Scheduled Date</th>
+              <th className="text-xs">Status</th>
+              <th className="text-xs">Print</th>
+              <th className="text-xs">Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredVisits.map((visit) => (
               <tr key={visit.id}>
-                <td className="text-primary font-medium">{visit.uniqueId}</td>
-                <td>{visit.customerName}</td>
-                <td>{visit.contact}</td>
+                <td className="text-primary font-medium text-sm">{visit.uniqueId}</td>
+                <td className="text-sm">{visit.customerName}</td>
+                <td className="text-sm">{visit.contact}</td>
                 <td>
-                  <Badge variant="secondary" className={getSourceBadge(visit.source)}>
+                  <Badge variant="secondary" className={`${getSourceBadge(visit.source)} text-xs`}>
                     {visit.source}
                   </Badge>
                 </td>
                 <td>
-                  <Badge variant="secondary" className={getPurposeBadge(visit.purpose)}>
+                  <Badge variant="secondary" className={`${getPurposeBadge(visit.purpose)} text-xs`}>
                     {visit.purpose}
                   </Badge>
                 </td>
-                <td>{visit.scheduledDate}</td>
+                <td className="text-sm">{visit.scheduledDate}</td>
                 <td>
-                  {visit.status === 'Assigned' ? (
-                    <div>
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-                        Assigned
-                      </Badge>
-                      {visit.assignedTo && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Assigned to {visit.assignedTo}
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100">
-                      Pending
-                    </Badge>
-                  )}
+                  <Badge className={`text-xs ${visit.status === 'Assigned' ? 'bg-green-100 text-green-700 hover:bg-green-100' : 'bg-orange-100 text-orange-700 hover:bg-orange-100'}`}>
+                    {visit.status}
+                  </Badge>
                 </td>
                 <td>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-7 w-7">
                     <Printer className="w-4 h-4 text-muted-foreground" />
                   </Button>
                 </td>
                 <td>
-                  <Button
-                    size="sm"
-                    onClick={() => setAssignPopup({ 
-                      isOpen: true, 
-                      customer: { name: visit.customerName, id: visit.uniqueId }
-                    })}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    Assign
-                  </Button>
+                  {visit.status === 'Assigned' && visit.assignedTo ? (
+                    <div className="text-xs text-right">
+                      <span className="text-muted-foreground">Assigned to</span>
+                      <br />
+                      <span className="font-medium text-foreground">{visit.assignedTo}</span>
+                    </div>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={() => setAssignPopup({ 
+                        isOpen: true, 
+                        visitId: visit.id,
+                        customer: { name: visit.customerName, id: visit.uniqueId }
+                      })}
+                      className="bg-primary hover:bg-primary/90 h-7 text-xs"
+                    >
+                      Assign
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -212,14 +209,13 @@ const RecentVisitsTable: React.FC = () => {
       </div>
 
       {/* Assign Popup */}
-      {assignPopup.customer && (
+      {assignPopup.customer && assignPopup.visitId && (
         <AssignPopup
           isOpen={assignPopup.isOpen}
-          onClose={() => setAssignPopup({ isOpen: false, customer: null })}
+          onClose={() => setAssignPopup({ isOpen: false, visitId: null, customer: null })}
           customer={assignPopup.customer}
           onAssign={(exec) => {
-            const visit = visits.find(v => v.uniqueId === assignPopup.customer?.id);
-            if (visit) handleAssign(visit.id, exec);
+            handleAssign(assignPopup.visitId!, exec);
           }}
         />
       )}
