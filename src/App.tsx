@@ -9,6 +9,7 @@ import Dashboard from "./pages/sales/Dashboard";
 import NotFound from "./pages/NotFound";
 
 import ReceptionistDashboard from "./pages/receptionist/Dashboard";
+import NewLeadForm from "./pages/receptionist/new-lead/NewLeadForm";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<AuthPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/receptionist" element={<ReceptionistDashboard />} />
+            <Route path="/receptionist/new-lead" element={<NewLeadForm />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

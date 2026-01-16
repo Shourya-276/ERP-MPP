@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, UserPlus, Building2, Handshake, RefreshCw } from 'lucide-react';
 import megaplexLogo from '@/assets/megaplex-logo.png';
 import { Input } from '@/components/ui/input';
 import { ReceptionistActionCard } from '@/components/dashboard/receptionist/ReceptionistActionCard';
 
 const ReceptionistDashboard: React.FC = () => {
+    const navigate = useNavigate();
     // Shared icon position/size style
     const iconStyle = {
         width: '115.54px',
@@ -41,6 +43,7 @@ const ReceptionistDashboard: React.FC = () => {
                         background="linear-gradient(143.67deg, #E6FAFF 6.65%, #75E1FF 75.68%)"
                         circle1Color="#C0F1FFB2"
                         circle2Color="#D9F7FFB2"
+                        onClick={() => navigate('/receptionist/new-lead')}
                         icon={
                             <UserPlus
                                 className="text-foreground/80 absolute"
