@@ -81,36 +81,112 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                 </div>
             </div>
 
-            {/* Conditional Work Details - Salaried Example */}
+            {/* Conditional Work Details */}
             <div className="bg-[#F8F9FE] p-6 rounded-xl space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-1 h-3 bg-[#4A1D59] rounded-full"></div>
-                    <h3 className="font-semibold text-[#4A1D59] text-sm">{workType} Employment Details</h3>
+                    <h3 className="font-semibold text-[#4A1D59] text-sm">
+                        {workType === 'Self-employed' ? 'Self-Employment' :
+                            workType === 'Government' ? 'Government Work' :
+                                workType === 'Freelancer' ? 'Freelance Work' :
+                                    workType === 'Retired' ? 'Retirement' :
+                                        workType + ' Employment'} Details
+                    </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                        <label className="text-xs font-medium text-[#4A1D59]">Job Title<span className="text-red-500">*</span></label>
-                        <Input placeholder="e.g. Software Engineer" className="bg-white border-gray-200" />
+                {workType === 'Salaried' && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Job Title<span className="text-red-500">*</span></label>
+                            <Input placeholder="e.g. Software Engineer" className="bg-white border-gray-200" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Organization Name</label>
+                            <Input placeholder="e.g. Megaplex Prime" className="bg-white border-gray-200" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Company Type<span className="text-red-500">*</span></label>
+                            <Select>
+                                <SelectTrigger className="bg-white border-gray-200">
+                                    <SelectValue placeholder="Select Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="private">Private</SelectItem>
+                                    <SelectItem value="mnc">MNC</SelectItem>
+                                    <SelectItem value="startup">Startup</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-medium text-[#4A1D59]">Organization Name</label>
-                        <Input placeholder="e.g. Megaplex Prime" className="bg-white border-gray-200" />
+                )}
+
+                {workType === 'Self-employed' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Business Type<span className="text-red-500">*</span></label>
+                            <Select>
+                                <SelectTrigger className="bg-white border-gray-200">
+                                    <SelectValue placeholder="Select Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="sole_proprietorship">Sole Proprietorship</SelectItem>
+                                    <SelectItem value="partnership">Partnership</SelectItem>
+                                    <SelectItem value="private_limited">Private Limited</SelectItem>
+                                    <SelectItem value="llp">LLP</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Years in Business<span className="text-red-500">*</span></label>
+                            <Input placeholder="Years" className="bg-white border-gray-200" />
+                        </div>
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-medium text-[#4A1D59]">Company Type<span className="text-red-500">*</span></label>
-                        <Select>
-                            <SelectTrigger className="bg-white border-gray-200">
-                                <SelectValue placeholder="Select Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="private">Private</SelectItem>
-                                <SelectItem value="mnc">MNC</SelectItem>
-                                <SelectItem value="startup">Startup</SelectItem>
-                            </SelectContent>
-                        </Select>
+                )}
+
+                {workType === 'Freelancer' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Field of Work<span className="text-red-500">*</span></label>
+                            <Input placeholder="e.g., Graphic Design, Consulting" className="bg-white border-gray-200" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Years of Experience<span className="text-red-500">*</span></label>
+                            <Input placeholder="Years" className="bg-white border-gray-200" />
+                        </div>
                     </div>
-                </div>
+                )}
+
+                {workType === 'Retired' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Previous Occupation<span className="text-red-500">*</span></label>
+                            <Input placeholder="e.g., Bank Manager" className="bg-white border-gray-200" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Years Since Retirement<span className="text-red-500">*</span></label>
+                            <Input placeholder="Years" className="bg-white border-gray-200" />
+                        </div>
+                    </div>
+                )}
+
+                {workType === 'Government' && (
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium text-[#4A1D59]">Department<span className="text-red-500">*</span></label>
+                                <Input placeholder="e.g., IT" className="bg-white border-gray-200" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium text-[#4A1D59]">Designation<span className="text-red-500">*</span></label>
+                                <Input placeholder="e.g., Employee" className="bg-white border-gray-200" />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-medium text-[#4A1D59]">Years of Service<span className="text-red-500">*</span></label>
+                            <Input placeholder="Years" className="bg-white border-gray-200" />
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Footer Actions */}

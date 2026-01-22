@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import ReceptionistDashboard from "./pages/receptionist/Dashboard";
 import NewLeadForm from "./pages/receptionist/new-lead/NewLeadForm";
 
+import ForgotPassword from "./pages/auth/ForgotPassword";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -22,6 +24,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<AuthPage />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/receptionist" element={<ReceptionistDashboard />} />
             <Route path="/receptionist/new-lead" element={<NewLeadForm />} />
