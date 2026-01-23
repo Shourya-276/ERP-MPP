@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { ClipboardCheck } from 'lucide-react';
+import thankyouIllustration from '@/assets/thankyou-illustration.png';
 
 const ThankYouStep: React.FC = () => {
 
@@ -40,17 +40,13 @@ const ThankYouStep: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center h-full pt-10 animate-in zoom-in duration-500">
 
-            {/* Illustration Placeholder - matching the one in the screenshot which is a person with a checklist */}
-            <div className="mb-8 relative">
-                <ClipboardCheck className="w-48 h-48 text-[#4A1D59] opacity-10" />
+            {/* Illustration */}
+            <div className="mb-8">
                 <img
-                    src="https://placehold.co/300x250/png?text=Success+Illustration"
-                    alt="Detailed Checklist Illustration"
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 object-contain"
+                    src={thankyouIllustration}
+                    alt="Thank You Illustration"
+                    className="w-64 h-64 object-contain"
                 />
-                {/* Note: In a real implementation I would put the SVG code or import the image asset provided. 
-                 Since I can't see the exact asset file path, I am using a placeholder that represents the visual weight. 
-             */}
             </div>
 
             <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
@@ -65,10 +61,6 @@ const ThankYouStep: React.FC = () => {
                 We've received your inquiry and our team is reviewing the details you shared about your housing needs.
                 One of our property specialists will be in touch shortly to help you explore the best options for your ideal home.
             </p>
-
-            {/* Confetti Visuals are handled by canvas-confetti, floating shapes can be added via CSS background or absolute divs 
-            if specific shapes are needed like in the image (triangles, squares floating around).
-        */}
         </div>
     );
 };
