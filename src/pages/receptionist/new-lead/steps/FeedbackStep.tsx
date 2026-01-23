@@ -5,23 +5,18 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Trash2, X } from 'lucide-react';
-import { translations, Language } from '../translations';
 
 interface FeedbackStepProps {
     onNext: () => void;
     onBack: () => void;
-    language: Language;
 }
 
-const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language }) => {
+const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack }) => {
     const [selectedSources, setSelectedSources] = useState<string[]>([]);
     const [showChannelPartner, setShowChannelPartner] = useState(false);
     const [isSignatureOpen, setIsSignatureOpen] = useState(false);
     const [signature, setSignature] = useState<string | null>(null);
     const sigCanvas = useRef<SignatureCanvas>(null);
-
-    const t = translations[language].feedback;
-    const tc = translations[language].common;
 
     const toggleSource = (source: string) => {
         if (selectedSources.includes(source)) {
@@ -71,15 +66,15 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="text-center mb-6">
-                <h2 className="text-lg font-bold text-foreground">{tc.shareRequirements}</h2>
-                <p className="text-muted-foreground text-sm">{tc.followSteps}</p>
+                <h2 className="text-lg font-bold text-foreground">Share your requirements in just a few simple steps 🚀</h2>
+                <p className="text-muted-foreground text-sm">Follow these three steps to find your perfect home effortlessly.</p>
             </div>
 
             <div className="space-y-6">
-                <h3 className="text-[#4A1D59] font-semibold text-sm">{t.whereDidYouFind}<span className="text-red-500">*</span></h3>
+                <h3 className="text-[#4A1D59] font-semibold text-sm">Where did you find out about us?<span className="text-red-500">*</span></h3>
 
                 <div className="space-y-4 ml-2">
-                    <div className="text-sm font-medium text-gray-600">{t.online}:</div>
+                    <div className="text-sm font-medium text-gray-600">Online:</div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <CheckboxOption label="Facebook" />
                         <CheckboxOption label="Instagram" />
@@ -91,7 +86,7 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                 </div>
 
                 <div className="space-y-4 ml-2">
-                    <div className="text-sm font-medium text-gray-600">{t.offline}:</div>
+                    <div className="text-sm font-medium text-gray-600">Offline:</div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <CheckboxOption label="Newspaper Ads" />
                         <CheckboxOption label="Billboards" />
@@ -108,7 +103,7 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                             )}>
                                 {selectedSources.includes('Reference') && <span className="text-white text-xs">✓</span>}
                             </div>
-                            {t.reference}
+                            Reference
                         </button>
                     </div>
                 </div>
@@ -116,10 +111,10 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                 {selectedSources.includes('Reference') && (
                     <div className="grid grid-cols-2 gap-8 pt-2">
                         <div className="relative border-b border-[#4A1D59]">
-                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder={t.nameOfReference} />
+                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder="Name of Reference" />
                         </div>
                         <div className="relative border-b border-[#4A1D59]">
-                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder={t.contact} />
+                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder="Contact" />
                         </div>
                     </div>
                 )}
@@ -137,20 +132,20 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                     )}>
                         {showChannelPartner && <span className="text-white text-xs">✓</span>}
                     </div>
-                    {t.broker}
+                    Broker/Channel Partner
                 </button>
 
                 {showChannelPartner && (
                     <div className="mt-4 grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
-                        <Input placeholder={t.cpFirm} className="bg-white border-gray-200" />
-                        <Input placeholder={t.execName} className="bg-white border-gray-200" />
-                        <div className="col-span-2 text-xs text-[#4A1D59]">{t.addFirm}</div>
+                        <Input placeholder="CP Firm" className="bg-white border-gray-200" />
+                        <Input placeholder="Exec. Name" className="bg-white border-gray-200" />
+                        <div className="col-span-2 text-xs text-[#4A1D59]">+ Add Firm (Office Use)</div>
 
                         <div className="col-span-2 flex gap-4">
                             <div className="w-20 bg-white border border-gray-200 rounded-md flex items-center justify-center gap-1 text-xs">
                                 <span>🇮🇳</span> +91
                             </div>
-                            <Input placeholder={translations[language].personalInfo.phone} className="flex-1 bg-white border-gray-200" />
+                            <Input placeholder="Phone Number" className="flex-1 bg-white border-gray-200" />
                         </div>
                     </div>
                 )}
@@ -162,21 +157,21 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                     <span className="text-white text-xs">✓</span>
                 </div>
                 <p className="text-xs text-gray-600 leading-tight">
-                    {t.consent}<span className="text-red-500">*</span>
+                    By proceeding, you consent to being contacted using the details provided and to receive relevant marketing communications.<span className="text-red-500">*</span>
                 </p>
             </div>
 
             {/* Signature */}
             <div className="flex justify-end">
                 <div className="w-64 space-y-2">
-                    <label className="text-xs font-bold text-[#4A1D59]">{t.signature}</label>
+                    <label className="text-xs font-bold text-[#4A1D59]">Signature</label>
 
                     {!signature ? (
                         <div
                             onClick={() => setIsSignatureOpen(true)}
                             className="h-24 bg-[#FAFAFA] border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs cursor-pointer hover:bg-gray-50 transition-colors"
                         >
-                            {t.tapToSign}
+                            Tap to sign
                         </div>
                     ) : (
                         <div className="relative h-24 bg-white border border-gray-200 rounded-lg overflow-hidden group">
@@ -201,7 +196,7 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
             <Dialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>{t.signature}</DialogTitle>
+                        <DialogTitle>Sign Here</DialogTitle>
                     </DialogHeader>
                     <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                         <SignatureCanvas
@@ -218,11 +213,11 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                     <DialogFooter className="flex justify-between sm:justify-between items-center w-full">
                         <Button type="button" variant="ghost" size="sm" onClick={clearSignature} className="text-red-500 hover:text-red-600 hover:bg-red-50">
                             <Trash2 className="w-4 h-4 mr-2" />
-                            {tc.clear}
+                            Clear
                         </Button>
                         <div className="flex gap-2">
-                            <Button type="button" variant="outline" onClick={() => setIsSignatureOpen(false)}>{tc.cancel}</Button>
-                            <Button type="button" onClick={saveSignature} className="bg-[#4A1D59] hover:bg-[#3d184a] text-white">{t.saveSignature}</Button>
+                            <Button type="button" variant="outline" onClick={() => setIsSignatureOpen(false)}>Cancel</Button>
+                            <Button type="button" onClick={saveSignature} className="bg-[#4A1D59] hover:bg-[#3d184a] text-white">Save Signature</Button>
                         </div>
                     </DialogFooter>
                 </DialogContent>
@@ -231,12 +226,12 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
 
             {/* Footer Actions */}
             <div className="flex justify-between items-center mt-12 pt-4">
-                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
+                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">← Back</Button>
                 <Button
                     onClick={onNext}
                     className="bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium"
                 >
-                    {tc.continue}
+                    Continue →
                 </Button>
             </div>
         </div>

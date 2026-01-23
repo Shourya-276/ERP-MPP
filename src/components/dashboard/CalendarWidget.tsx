@@ -3,8 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CalendarWidget: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const realToday = new Date();
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 11, 17)); // December 2025
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -44,11 +43,7 @@ const CalendarWidget: React.FC = () => {
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const isToday =
-        day === realToday.getDate() &&
-        currentDate.getMonth() === realToday.getMonth() &&
-        currentDate.getFullYear() === realToday.getFullYear();
-
+      const isToday = day === 17 && currentDate.getMonth() === 11;
       days.push(
         <button
           key={day}
