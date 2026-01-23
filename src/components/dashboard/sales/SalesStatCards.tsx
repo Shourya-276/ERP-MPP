@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Users, RotateCcw, Calendar, TrendingUp } from 'lucide-react';
+import { Phone, Users, UserCheck, Home, Calendar } from 'lucide-react';
 
 interface StatCardProps {
   label: string;
@@ -7,110 +7,112 @@ interface StatCardProps {
   trend?: { value: string; isPositive: boolean };
   icon: React.ReactNode;
   iconBg: string;
+  extra?: React.ReactNode;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, trend, icon, iconBg }) => (
-  <div className="flex items-center gap-3">
-    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconBg}`}>
-      {icon}
-    </div>
+const StatCard: React.FC<StatCardProps> = ({ label, value, trend, icon, iconBg, extra }) => (
+  <div className="bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm">
     <div>
-      <div className="flex items-center gap-2">
-        <span className="text-2xl font-bold">{value}</span>
-        {trend && (
-          <span className={`text-xs ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-            {trend.isPositive ? '+' : ''}{trend.value}
-          </span>
-        )}
-      </div>
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-3xl font-bold text-foreground">{value}</p>
+      {trend && (
+        <p className={`text-xs ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+          {trend.isPositive ? '+' : ''}{trend.value} vs<br />last period
+        </p>
+      )}
+      <p className="text-sm font-medium text-foreground mt-1">{label}</p>
+      {extra}
+    </div>
+    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${iconBg}`}>
+      {icon}
     </div>
   </div>
 );
 
 const SalesStatCards: React.FC = () => {
   return (
-    <div className="bg-white rounded-2xl p-5 border">
-      {/* Location, Project, Project Name row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div>
-          <p className="text-xs text-muted-foreground mb-1">Location</p>
-          <p className="font-semibold text-foreground">Chembur</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground mb-1">Project</p>
-          <p className="font-semibold text-foreground">Swastik</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground mb-1">Project Name</p>
-          <p className="font-semibold text-foreground">Swastik Legacy</p>
-        </div>
-        <div 
-          className="rounded-xl p-3 flex items-center gap-3"
-          style={{
-            background: 'linear-gradient(108.4deg, rgba(32, 219, 29, 0.2) 38.52%, rgba(195, 255, 194, 0.2) 101.88%)',
-          }}
-        >
-          <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-green-600" />
+    <div 
+      className="rounded-2xl p-4"
+      style={{ background: 'rgba(245, 213, 210, 0.5)' }}
+    >
+      {/* Location, Project, Project Name header inside white container */}
+      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+        <div className="grid grid-cols-4 gap-4 items-center">
+          <div className="border-r border-gray-200">
+            <p className="text-xs text-purple-400 mb-1">Location</p>
+            <p className="font-semibold text-lg text-foreground">Chembur</p>
+          </div>
+          <div className="border-r border-gray-200">
+            <p className="text-xs text-purple-400 mb-1">Project</p>
+            <p className="font-semibold text-lg text-foreground">Swastik</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">My Achieved Target</p>
-            <p className="font-bold text-lg">132<span className="text-xs text-muted-foreground font-normal">/250 Bookings done</span></p>
+            <p className="text-xs text-purple-400 mb-1">Project Name</p>
+            <p className="font-semibold text-lg text-foreground">Swastik Legacy</p>
+          </div>
+          <div className="flex justify-end">
+            <div className="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-purple-400" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-3 mb-4">
         <StatCard
           label="Calls Done"
           value={312}
-          trend={{ value: '4.2% vs last period', isPositive: true }}
-          icon={<Phone className="w-5 h-5 text-blue-600" />}
-          iconBg="bg-blue-100"
+          trend={{ value: '12%', isPositive: true }}
+          icon={<Phone className="w-6 h-6 text-blue-600" />}
+          iconBg="bg-blue-200"
         />
         <StatCard
           label="Total Visits"
           value={18}
-          trend={{ value: '2.5% vs last period', isPositive: true }}
-          icon={<Users className="w-5 h-5 text-purple-600" />}
-          iconBg="bg-purple-100"
+          trend={{ value: '12%', isPositive: true }}
+          icon={<Users className="w-6 h-6 text-purple-600" />}
+          iconBg="bg-purple-200"
         />
         <StatCard
           label="Total Revisits"
           value="5/18"
-          trend={{ value: '4.2% vs last period', isPositive: true }}
-          icon={<RotateCcw className="w-5 h-5 text-green-600" />}
-          iconBg="bg-green-100"
+          trend={{ value: '12%', isPositive: true }}
+          icon={<UserCheck className="w-6 h-6 text-green-600" />}
+          iconBg="bg-green-200"
         />
         <StatCard
           label="Bookings"
           value={5}
-          icon={<Calendar className="w-5 h-5 text-amber-600" />}
-          iconBg="bg-amber-100"
+          trend={{ value: '12%', isPositive: true }}
+          icon={<Home className="w-6 h-6 text-orange-600" />}
+          iconBg="bg-orange-200"
+          extra={
+            <p className="text-xs text-orange-500 mt-1">Visit: Booking<br /><span className="font-bold">4:1</span></p>
+          }
         />
-        <div></div>
       </div>
 
-      {/* Booking Prospect row */}
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Booking Prospect</h3>
-        <div className="grid grid-cols-3 gap-4">
+      {/* Booking Prospect row inside white container */}
+      <div className="bg-white rounded-xl p-4 shadow-sm">
+        <h3 className="text-base font-semibold mb-3">Booking Prospect</h3>
+        <div className="grid grid-cols-3 gap-3">
           {/* Hot Leads */}
           <div 
             className="rounded-xl p-4"
             style={{
               background: 'linear-gradient(135deg, #FEF2F2 0%, #FFF7ED 100%)',
-              borderTop: '0.8px solid #FFE2E2',
+              borderTop: '3px solid #FF6B6B',
             }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-red-500"></span>
-              <span className="text-xs font-medium text-red-600">Hot Leads</span>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-3xl font-bold">87</p>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                <span className="text-sm font-medium text-red-500">Hot Leads</span>
+              </div>
             </div>
-            <p className="text-2xl font-bold">87</p>
-            <p className="text-xs text-muted-foreground">High priority prospects</p>
+            <p className="text-xs text-muted-foreground mb-2">High priority prospects</p>
+            <div className="h-1 bg-gradient-to-r from-red-500 to-red-200 rounded-full"></div>
           </div>
 
           {/* Warm Leads */}
@@ -118,15 +120,18 @@ const SalesStatCards: React.FC = () => {
             className="rounded-xl p-4"
             style={{
               background: '#FEFAEA',
-              borderTop: '0.8px solid #FFE2E2',
+              borderTop: '3px solid #FFB347',
             }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-              <span className="text-xs font-medium text-amber-600">Warm Leads</span>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-3xl font-bold">34</p>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span className="text-sm font-medium text-amber-500">Warm Leads</span>
+              </div>
             </div>
-            <p className="text-2xl font-bold">34</p>
-            <p className="text-xs text-muted-foreground">High priority prospects</p>
+            <p className="text-xs text-muted-foreground mb-2">High priority prospects</p>
+            <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-200 rounded-full"></div>
           </div>
 
           {/* Cold Leads */}
@@ -134,15 +139,18 @@ const SalesStatCards: React.FC = () => {
             className="rounded-xl p-4"
             style={{
               background: '#EDFAFF',
-              borderTop: '0.8px solid #FFE2E2',
+              borderTop: '3px solid #60A5FA',
             }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span className="text-xs font-medium text-blue-600">Cold Leads</span>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-3xl font-bold">45</p>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span className="text-sm font-medium text-blue-500">Cold Leads</span>
+              </div>
             </div>
-            <p className="text-2xl font-bold">45</p>
-            <p className="text-xs text-muted-foreground">High priority prospects</p>
+            <p className="text-xs text-muted-foreground mb-2">High priority prospects</p>
+            <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-200 rounded-full"></div>
           </div>
         </div>
       </div>

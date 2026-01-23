@@ -40,12 +40,12 @@ const SalesDashboard: React.FC = () => {
             <CalendarWidget />
           </div>
 
-          {/* Stats + Alerts row */}
+          {/* Stats + Alerts row - side by side */}
           <div className="flex gap-4 mb-5">
             <div className="flex-1">
               <SalesStatCards />
             </div>
-            <div className="w-64">
+            <div className="w-60 shrink-0">
               <AlertsCard />
             </div>
           </div>
