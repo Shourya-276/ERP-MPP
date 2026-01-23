@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, UserPlus, Building2, Handshake, RefreshCw, Tag } from 'lucide-react';
+import { Search, UserPlus, Building2, Handshake, RefreshCw, Tag, X } from 'lucide-react';
 import megaplexLogo from '@/assets/megaplex-logo.png';
 import { Input } from '@/components/ui/input';
 import { ReceptionistActionCard } from '@/components/dashboard/receptionist/ReceptionistActionCard';
@@ -16,6 +16,21 @@ const ReceptionistDashboard: React.FC = () => {
     const [isAddRevisitModalOpen, setIsAddRevisitModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [showDropdown, setShowDropdown] = useState(false);
+    const searchContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     // Shared icon position/size style
     const iconStyle = {
@@ -36,17 +51,35 @@ const ReceptionistDashboard: React.FC = () => {
 
             <main className="flex-1 p-6 container mx-auto max-w-5xl">
                 {/* Search Bar */}
-                <div className="relative mb-8">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <div className="relative mb-8" ref={searchContainerRef}>
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 pointer-events-none" />
                     <Input
-                        className="w-full h-14 pl-12 bg-[#F3E8FF] border-none text-lg placeholder:text-muted-foreground/70 rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="w-full h-14 pl-12 pr-12 bg-[#F3E8FF] border-none text-lg placeholder:text-muted-foreground/70 rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0"
                         placeholder="Search by Unique ID"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setShowDropdown(true);
+                        }}
+                        onFocus={() => setShowDropdown(true)}
                     />
 
-                    {/* Search Results Dropdown */}
+                    {/* Clear Search Button */}
                     {searchQuery && (
+                        <button
+                            onClick={() => {
+                                setSearchQuery('');
+                                setShowDropdown(false);
+                            }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-black/5 rounded-full"
+                            aria-label="Clear search"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    )}
+
+                    {/* Search Results Dropdown */}
+                    {searchQuery && showDropdown && (
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50 p-2">
                             {/* Mock results matching the image */}
                             {[

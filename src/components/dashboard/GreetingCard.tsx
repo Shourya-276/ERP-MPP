@@ -12,8 +12,8 @@ const GreetingCard: React.FC = () => {
         boxShadow: '0px 8px 10px -6px #FFF08580, 0px 20px 25px -12px #FFF08580'
       }}
     >
-      <div className="relative z-10 w-2/3">
-        <span className="inline-flex items-center gap-1.5 bg-white/80 text-xs px-3 py-1 rounded-full mb-2">
+      <div className="relative z-10 w-[75%] h-full flex flex-col justify-center">
+        <span className="inline-flex items-center gap-1.5 bg-white/80 text-xs px-3 py-1 rounded-full mb-2 self-start">
           ✨ Welcome Back
         </span>
         <h2 className="text-2xl font-bold text-foreground mb-2">Good Morning, Sara!</h2>
