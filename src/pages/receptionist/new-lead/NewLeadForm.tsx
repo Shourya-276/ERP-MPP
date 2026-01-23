@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import megaplexLogo from '@/assets/megaplex-logo.png';
+import formIllustration from '@/assets/form-illustration.png';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PersonalInfoStep from './steps/PersonalInfoStep';
@@ -89,11 +90,7 @@ const NewLeadForm: React.FC = () => {
                 */}
                         <div className="flex justify-between items-start mb-6">
                             <div className="flex-1 flex justify-center">
-                                {/* Centered Illustration would go here if we had the SVG/Image. 
-                             Using a placeholder or omitting for now as per instructions "make it nicely as per image".
-                             I'll add a placeholder div that mimics the layout.
-                          */}
-                                <img src="https://placehold.co/200x120/png?text=Illustration" alt="Step Illustration" className="h-32 object-contain opacity-50" />
+                                <img src={formIllustration} alt="Step Illustration" className="h-32 object-contain" />
                             </div>
                             <div className="bg-[#F3E8FF] rounded-full p-1 flex">
                                 <button className="px-4 py-1.5 rounded-full bg-[#E6D5F0] text-[#4A1D59] text-xs font-medium shadow-sm">English</button>
