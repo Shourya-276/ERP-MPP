@@ -19,8 +19,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string): boolean => {
-    // Mock authentication - only accept specific credentials
-    if (email.toLowerCase() === 'recep@gmail.com' && password === '1234') {
+    // Mock authentication - accept specific credentials
+    const lowerEmail = email.toLowerCase();
+    
+    if (lowerEmail === 'recep@gmail.com' && password === '1234') {
       setUser({
         email: 'recep@gmail.com',
         name: 'Sara',
@@ -28,6 +30,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
       return true;
     }
+    
+    if (lowerEmail === 'sales@gmail.com' && password === '1234') {
+      setUser({
+        email: 'sales@gmail.com',
+        name: 'Sara',
+        role: 'Sales Executive',
+      });
+      return true;
+    }
+    
     return false;
   };
 
