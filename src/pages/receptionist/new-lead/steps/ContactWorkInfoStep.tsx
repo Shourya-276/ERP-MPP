@@ -3,66 +3,88 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { translations, Language } from '../translations';
 
 interface ContactWorkInfoStepProps {
     onNext: () => void;
     onBack: () => void;
+    language: Language;
 }
 
-const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBack }) => {
+const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBack, language }) => {
     const [workType, setWorkType] = useState('Salaried');
+    const t = translations[language].contactWork;
+    const tc = translations[language].common;
+
+    const workTypeMap: Record<string, string> = {
+        'Salaried': t.workTypes.salaried,
+        'Government': t.workTypes.government,
+        'Self-employed': t.workTypes.selfEmployed,
+        'Freelancer': t.workTypes.freelancer,
+        'Retired': t.workTypes.retired
+    };
+
+    const getWorkDetailsHeader = () => {
+        switch (workType) {
+            case 'Self-employed': return t.workTypes.selfEmployed;
+            case 'Government': return t.workTypes.government;
+            case 'Freelancer': return t.workTypes.freelancer;
+            case 'Retired': return t.workTypes.retired;
+            default: return workTypeMap[workType] || workType;
+        }
+    };
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="text-center mb-6">
-                <h2 className="text-lg font-bold text-foreground">Share your requirements in just a few simple steps 🚀</h2>
-                <p className="text-muted-foreground text-sm">Follow these three steps to find your perfect home effortlessly.</p>
+                <h2 className="text-lg font-bold text-foreground">{tc.shareRequirements}</h2>
+                <p className="text-muted-foreground text-sm">{tc.followSteps}</p>
             </div>
 
             {/* Current Residence Type */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">What is your current residence type?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.currentResidenceType}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     <button className="flex-1 py-3 px-4 rounded-lg border-2 border-[#4A1D59] bg-[#E6D5F0] text-[#4A1D59] font-medium flex items-center gap-2 justify-center">
                         <span className="w-4 h-4 rounded bg-[#4A1D59] flex items-center justify-center">
                             <span className="text-white text-[10px]">✓</span>
                         </span>
-                        Owned House
+                        {t.ownedHouse}
                     </button>
                     <button className="flex-1 py-3 px-4 rounded-lg border border-gray-200 bg-white text-gray-500 font-medium flex items-center gap-2 justify-center hover:bg-gray-50">
                         <span className="w-4 h-4 rounded border border-gray-300"></span>
-                        Rented House
+                        {t.rentedHouse}
                     </button>
                 </div>
             </div>
 
             {/* Address */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1D59]">Share Your Current Address<span className="text-red-500">*</span></label>
-                <Input placeholder="Enter street address" className="bg-[#FAFAFA] border-gray-100 h-12" />
+                <label className="text-sm font-medium text-[#4A1D59]">{t.shareAddress}<span className="text-red-500">*</span></label>
+                <Input placeholder={t.enterAddress} className="bg-[#FAFAFA] border-gray-100 h-12" />
             </div>
 
             {/* Location Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">Location<span className="text-red-500">*</span></label>
+                    <label className="text-sm font-medium text-[#4A1D59]">{t.location}<span className="text-red-500">*</span></label>
                     <Input placeholder="e.g. Vikhroli" className="bg-[#FAFAFA] border-gray-100 h-12" />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">Sub Location</label>
+                    <label className="text-sm font-medium text-[#4A1D59]">{t.subLocation}</label>
                     <Input placeholder="e.g. Kannamwar Nagar" className="bg-[#FAFAFA] border-gray-100 h-12" />
                 </div>
             </div>
 
             {/* Pin Code */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1D59]">Pin Code<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.pinCode}<span className="text-red-500">*</span></label>
                 <Input placeholder="Enter pin code" className="bg-[#FAFAFA] border-gray-100 h-12" />
             </div>
 
             {/* Work Type */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">Describe Your Work Type<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.describeWorkType}<span className="text-red-500">*</span></label>
                 <div className="flex flex-wrap gap-2">
                     {['Salaried', 'Government', 'Self-employed', 'Freelancer', 'Retired'].map((type) => (
                         <button
@@ -75,7 +97,7 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                                     : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                             )}
                         >
-                            {type}
+                            {workTypeMap[type]}
                         </button>
                     ))}
                 </div>
@@ -86,29 +108,25 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-1 h-3 bg-[#4A1D59] rounded-full"></div>
                     <h3 className="font-semibold text-[#4A1D59] text-sm">
-                        {workType === 'Self-employed' ? 'Self-Employment' :
-                            workType === 'Government' ? 'Government Work' :
-                                workType === 'Freelancer' ? 'Freelance Work' :
-                                    workType === 'Retired' ? 'Retirement' :
-                                        workType + ' Employment'} Details
+                        {getWorkDetailsHeader()} {t.detailsSuffix}
                     </h3>
                 </div>
 
                 {workType === 'Salaried' && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Job Title<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.jobTitle}<span className="text-red-500">*</span></label>
                             <Input placeholder="e.g. Software Engineer" className="bg-white border-gray-200" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Organization Name</label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.orgName}</label>
                             <Input placeholder="e.g. Megaplex Prime" className="bg-white border-gray-200" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Company Type<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.companyType}<span className="text-red-500">*</span></label>
                             <Select>
                                 <SelectTrigger className="bg-white border-gray-200">
-                                    <SelectValue placeholder="Select Type" />
+                                    <SelectValue placeholder={translations[language].personalInfo.select} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="private">Private</SelectItem>
@@ -123,10 +141,10 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                 {workType === 'Self-employed' && (
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Business Type<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.businessType}<span className="text-red-500">*</span></label>
                             <Select>
                                 <SelectTrigger className="bg-white border-gray-200">
-                                    <SelectValue placeholder="Select Type" />
+                                    <SelectValue placeholder={translations[language].personalInfo.select} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="sole_proprietorship">Sole Proprietorship</SelectItem>
@@ -137,7 +155,7 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Years in Business<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsInBusiness}<span className="text-red-500">*</span></label>
                             <Input placeholder="Years" className="bg-white border-gray-200" />
                         </div>
                     </div>
@@ -146,11 +164,11 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                 {workType === 'Freelancer' && (
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Field of Work<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.fieldOfWork}<span className="text-red-500">*</span></label>
                             <Input placeholder="e.g., Graphic Design, Consulting" className="bg-white border-gray-200" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Years of Experience<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsOfExperience}<span className="text-red-500">*</span></label>
                             <Input placeholder="Years" className="bg-white border-gray-200" />
                         </div>
                     </div>
@@ -159,11 +177,11 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                 {workType === 'Retired' && (
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Previous Occupation<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.prevOccupation}<span className="text-red-500">*</span></label>
                             <Input placeholder="e.g., Bank Manager" className="bg-white border-gray-200" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Years Since Retirement<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsSinceRetirement}<span className="text-red-500">*</span></label>
                             <Input placeholder="Years" className="bg-white border-gray-200" />
                         </div>
                     </div>
@@ -173,16 +191,16 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                     <div className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-[#4A1D59]">Department<span className="text-red-500">*</span></label>
+                                <label className="text-xs font-medium text-[#4A1D59]">{t.fields.department}<span className="text-red-500">*</span></label>
                                 <Input placeholder="e.g., IT" className="bg-white border-gray-200" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-[#4A1D59]">Designation<span className="text-red-500">*</span></label>
+                                <label className="text-xs font-medium text-[#4A1D59]">{t.fields.designation}<span className="text-red-500">*</span></label>
                                 <Input placeholder="e.g., Employee" className="bg-white border-gray-200" />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">Years of Service<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsOfService}<span className="text-red-500">*</span></label>
                             <Input placeholder="Years" className="bg-white border-gray-200" />
                         </div>
                     </div>
@@ -191,12 +209,12 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
 
             {/* Footer Actions */}
             <div className="flex justify-between items-center mt-12 pt-4">
-                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">← Back</Button>
+                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
                 <Button
                     onClick={onNext}
                     className="bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium"
                 >
-                    Continue →
+                    {tc.continue}
                 </Button>
             </div>
         </div>

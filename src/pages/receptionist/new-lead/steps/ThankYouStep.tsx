@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import thankyouIllustration from '@/assets/thankyou-illustration.png';
+import { translations, Language } from '../translations';
 
-const ThankYouStep: React.FC = () => {
+interface ThankYouStepProps {
+    language: Language;
+}
+
+const ThankYouStep: React.FC<ThankYouStepProps> = ({ language }) => {
+    const t = translations[language].thankYou;
 
     useEffect(() => {
         const duration = 3 * 1000;
@@ -45,24 +51,24 @@ const ThankYouStep: React.FC = () => {
                 <img
                     src={thankyouIllustration}
                     alt="Thank You Illustration"
-                    className="w-64 h-64 object-contain"
+                    className="h-[400px] w-auto object-contain"
                 />
             </div>
 
             <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
-                Thank You <span className="text-[#4A1D59]">Dr. Shreya Patil!</span>
+                {t.title} <span className="text-[#4A1D59]">Dr. Shreya Patil!</span>
             </h2>
 
             <p className="text-xl font-medium text-foreground/80 mb-6 text-center">
-                You're one step closer to your new home!
+                {t.subtitle}
             </p>
 
             <p className="text-center text-muted-foreground max-w-lg mx-auto leading-relaxed">
-                We've received your inquiry and our team is reviewing the details you shared about your housing needs.
-                One of our property specialists will be in touch shortly to help you explore the best options for your ideal home.
+                {t.message}
             </p>
         </div>
     );
 };
 
 export default ThankYouStep;
+

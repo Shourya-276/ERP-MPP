@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { translations, Language } from '../translations';
 
 interface PropertyDetailsStepProps {
     onNext: () => void;
     onBack: () => void;
+    language: Language;
 }
 
-const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBack }) => {
+const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBack, language }) => {
     const [purpose, setPurpose] = useState('Primary Residence');
     const [config, setConfig] = useState('2 BHK');
     const [budget, setBudget] = useState('71 lacs - 80 lacs');
@@ -15,15 +17,38 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
     const [floor, setFloor] = useState('Upper level');
     const [view, setView] = useState('Mangrove view');
 
+    const t = translations[language].propertyDetails;
+    const tc = translations[language].common;
+
+    const purposeMap: Record<string, string> = {
+        'Primary Residence': t.options.primaryResidence,
+        'Investment': t.options.investment,
+        'Second Home': t.options.secondHome
+    };
+
+    const floorMap: Record<string, string> = {
+        'Lower level': t.floorOptions.lower,
+        'Middle level': t.floorOptions.middle,
+        'Upper level': t.floorOptions.upper
+    };
+
+    const viewMap: Record<string, string> = {
+        'City view': t.viewOptions.city,
+        'Mangrove view': t.viewOptions.mangrove,
+        'Both': t.viewOptions.both
+    };
+
     const OptionButton = ({
         selected,
         onClick,
         label,
+        displayLabel,
         fullWidth = false
     }: {
         selected: boolean,
         onClick: () => void,
         label: string,
+        displayLabel?: string,
         fullWidth?: boolean
     }) => (
         <button
@@ -42,25 +67,26 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
             )}>
                 {selected && <span className="text-white text-[10px]">✓</span>}
             </div>
-            {label}
+            {displayLabel || label}
         </button>
     );
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="text-center mb-6">
-                <h2 className="text-lg font-bold text-foreground">Share your requirements in just a few simple steps 🚀</h2>
-                <p className="text-muted-foreground text-sm">Follow these three steps to find your perfect home effortlessly.</p>
+                <h2 className="text-lg font-bold text-foreground">{tc.shareRequirements}</h2>
+                <p className="text-muted-foreground text-sm">{tc.followSteps}</p>
             </div>
 
             {/* Purpose */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">What is your purpose of buying?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.purpose}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     {['Primary Residence', 'Investment', 'Second Home'].map(opt => (
                         <OptionButton
                             key={opt}
                             label={opt}
+                            displayLabel={purposeMap[opt]}
                             selected={purpose === opt}
                             onClick={() => setPurpose(opt)}
                         />
@@ -70,7 +96,7 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* Configuration */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">Which configuration suits you best?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.configuration}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     {['1 BHK', '2 BHK', '3 BHK', 'Jodi'].map(opt => (
                         <OptionButton
@@ -85,7 +111,7 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* Budget */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">How much would you like to invest?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.budget}<span className="text-red-500">*</span></label>
                 <div className="grid grid-cols-3 gap-4">
                     {['71 lacs - 80 lacs', '81 lacs - 90 lacs', '90 lacs - 1 Cr', '1.01 Cr - 1.20 Cr', '1.20 Crs & Above'].map(opt => (
                         <OptionButton
@@ -101,7 +127,7 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* Possession */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">What is your target possession date?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.possession}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     {['2027', '2028', '2029'].map(opt => (
                         <OptionButton
@@ -116,12 +142,13 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* Floor Level */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">What is your preferred floor level?<span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.floor}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     {['Lower level', 'Middle level', 'Upper level'].map(opt => (
                         <OptionButton
                             key={opt}
                             label={opt}
+                            displayLabel={floorMap[opt]}
                             selected={floor === opt}
                             onClick={() => setFloor(opt)}
                         />
@@ -131,12 +158,13 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* View */}
             <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">What view are you interested in?</label>
+                <label className="text-sm font-medium text-[#4A1D59]">{t.view}</label>
                 <div className="flex gap-4">
                     {['City view', 'Mangrove view', 'Both'].map(opt => (
                         <OptionButton
                             key={opt}
                             label={opt}
+                            displayLabel={viewMap[opt]}
                             selected={view === opt}
                             onClick={() => setView(opt)}
                         />
@@ -146,12 +174,12 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
 
             {/* Footer Actions */}
             <div className="flex justify-between items-center mt-12 pt-4">
-                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">← Back</Button>
+                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
                 <Button
                     onClick={onNext}
                     className="bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium"
                 >
-                    Continue →
+                    {tc.continue}
                 </Button>
             </div>
         </div>

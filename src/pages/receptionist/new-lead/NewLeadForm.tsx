@@ -10,18 +10,22 @@ import ContactWorkInfoStep from './steps/ContactWorkInfoStep';
 import PropertyDetailsStep from './steps/PropertyDetailsStep';
 import FeedbackStep from './steps/FeedbackStep';
 import ThankYouStep from './steps/ThankYouStep';
-
-const steps = [
-    { number: 1, label: 'Personal Info' },
-    { number: 2, label: 'Contact & Work Info' },
-    { number: 3, label: 'Property Details' },
-    { number: 4, label: 'Feedback' },
-];
+import { translations, Language } from './translations';
 
 const NewLeadForm: React.FC = () => {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
+    const [language, setLanguage] = useState<Language>('en');
     const [formData, setFormData] = useState({}); // To store data across steps if needed
+
+    const t = translations[language];
+
+    const steps = [
+        { number: 1, label: t.common.personalInfo },
+        { number: 2, label: t.common.contactWorkInfo },
+        { number: 3, label: t.common.propertyDetails },
+        { number: 4, label: t.common.feedback },
+    ];
 
     const handleNext = () => {
         setCurrentStep((prev) => Math.min(prev + 1, 5)); // 5 is Thank You step
@@ -38,12 +42,12 @@ const NewLeadForm: React.FC = () => {
             {/* Header */}
             <header className="bg-[#4A1D59] p-4 text-white flex justify-between items-center shadow-md">
                 <div className="flex items-center gap-4">
-                    <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain brightness-0 invert" />
+                    <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain" />
                     {/* Note: In image logo is gold, but on purple header standard logo might suffice or we use filter. 
                  The image shows gold logo on purple background. Assuming the imported logo is the gold one. */}
                     <span className="hidden">Megaplex Prime</span>
                 </div>
-                <div className="text-xl font-medium">Customer Enquiry Form</div>
+                <div className="text-xl font-medium">{t.common.customerEnquiryForm}</div>
                 <button onClick={() => navigate('/receptionist')} className="text-white hover:bg-white/10 p-2 rounded-full transition-colors">
                     <X className="w-6 h-6" />
                 </button>
@@ -93,8 +97,28 @@ const NewLeadForm: React.FC = () => {
                                 <img src={formIllustration} alt="Step Illustration" className="h-32 object-contain" />
                             </div>
                             <div className="bg-[#F3E8FF] rounded-full p-1 flex">
-                                <button className="px-4 py-1.5 rounded-full bg-[#E6D5F0] text-[#4A1D59] text-xs font-medium shadow-sm">English</button>
-                                <button className="px-4 py-1.5 rounded-full text-foreground/60 text-xs font-medium hover:bg-black/5">मराठी</button>
+                                <button
+                                    onClick={() => setLanguage('en')}
+                                    className={cn(
+                                        "px-4 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm",
+                                        language === 'en'
+                                            ? "bg-[#E6D5F0] text-[#4A1D59] font-bold"
+                                            : "text-foreground/60 hover:bg-black/5"
+                                    )}
+                                >
+                                    English
+                                </button>
+                                <button
+                                    onClick={() => setLanguage('mr')}
+                                    className={cn(
+                                        "px-4 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm",
+                                        language === 'mr'
+                                            ? "bg-[#E6D5F0] text-[#4A1D59] font-bold"
+                                            : "text-foreground/60 hover:bg-black/5"
+                                    )}
+                                >
+                                    मराठी
+                                </button>
                             </div>
                         </div>
                     </>
@@ -102,11 +126,11 @@ const NewLeadForm: React.FC = () => {
 
                 {/* Form Steps */}
                 <div className="flex-1 bg-white">
-                    {currentStep === 1 && <PersonalInfoStep onNext={handleNext} />}
-                    {currentStep === 2 && <ContactWorkInfoStep onNext={handleNext} onBack={handleBack} />}
-                    {currentStep === 3 && <PropertyDetailsStep onNext={handleNext} onBack={handleBack} />}
-                    {currentStep === 4 && <FeedbackStep onNext={handleNext} onBack={handleBack} />}
-                    {currentStep === 5 && <ThankYouStep />}
+                    {currentStep === 1 && <PersonalInfoStep onNext={handleNext} language={language} />}
+                    {currentStep === 2 && <ContactWorkInfoStep onNext={handleNext} onBack={handleBack} language={language} />}
+                    {currentStep === 3 && <PropertyDetailsStep onNext={handleNext} onBack={handleBack} language={language} />}
+                    {currentStep === 4 && <FeedbackStep onNext={handleNext} onBack={handleBack} language={language} />}
+                    {currentStep === 5 && <ThankYouStep language={language} />}
                 </div>
 
             </main>
