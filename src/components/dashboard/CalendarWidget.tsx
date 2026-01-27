@@ -3,7 +3,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CalendarWidget: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 11, 17)); // December 2025
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const today = new Date();
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -38,22 +39,27 @@ const CalendarWidget: React.FC = () => {
 
     // Empty cells for days before the first day of month
     for (let i = 0; i < startingDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-7 w-7" />);
+      days.push(<div key={`empty-${i}`} className="w-8 h-8" />);
     }
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const isToday = day === 17 && currentDate.getMonth() === 11;
+      const isToday =
+        day === today.getDate() &&
+        currentDate.getMonth() === today.getMonth() &&
+        currentDate.getFullYear() === today.getFullYear();
+
       days.push(
-        <button
-          key={day}
-          className={`h-7 w-7 rounded-full text-xs flex items-center justify-center transition-colors ${isToday
-            ? 'bg-[#F3E8FF] text-[#4A1D59] font-medium'
-            : 'hover:bg-muted text-foreground'
-            }`}
-        >
-          {day}
-        </button>
+        <div key={day} className="flex justify-center">
+          <button
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-colors ${isToday
+              ? 'bg-[#F3E8FF] text-[#4A1D59] font-bold'
+              : 'text-gray-700 hover:bg-gray-50'
+              }`}
+          >
+            {day}
+          </button>
+        </div>
       );
     }
 
@@ -61,49 +67,37 @@ const CalendarWidget: React.FC = () => {
   };
 
   return (
-    <div
-      className="bg-white rounded-2xl p-3 shadow-sm border flex-shrink-0"
-      style={{ width: '280px' }}
-    >
-      {/* Header */}
+    <div className="bg-white rounded-3xl shadow-sm border h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div
-        className="flex items-center justify-between mb-3 rounded-lg px-3 py-2"
+        className="px-4 py-3 flex items-center justify-between shrink-0"
         style={{ background: 'linear-gradient(90deg, #E9D4FF 0%, #DAB2FF 100%)' }}
       >
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={prevMonth}
-          className="text-[#4A1D59] hover:bg-white/20 h-6 w-6"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <span className="font-semibold text-[#4A1D59] text-sm">
+        <button onClick={prevMonth} className="text-[#4A1D59] hover:bg-black/5 rounded-full p-1">
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <span className="font-bold text-[#4A1D59] text-base">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={nextMonth}
-          className="text-[#4A1D59] hover:bg-white/20 h-6 w-6"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <button onClick={nextMonth} className="text-[#4A1D59] hover:bg-black/5 rounded-full p-1">
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
 
-      {/* Days of week */}
-      <div className="grid grid-cols-7 gap-0.5 mb-1">
-        {daysOfWeek.map((day) => (
-          <div key={day} className="h-7 w-7 flex items-center justify-center text-[10px] text-muted-foreground font-medium">
-            {day}
-          </div>
-        ))}
-      </div>
+      <div className="p-3 flex-1 flex flex-col">
+        {/* Days of week */}
+        <div className="grid grid-cols-7 mb-2 shrink-0">
+          {daysOfWeek.map((day) => (
+            <div key={day} className="text-center text-[11px] text-gray-400 font-medium uppercase tracking-wider">
+              {day}
+            </div>
+          ))}
+        </div>
 
-      {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-0.5">
-        {renderDays()}
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 gap-y-0.5 flex-1 items-center content-center">
+          {renderDays()}
+        </div>
       </div>
     </div>
   );

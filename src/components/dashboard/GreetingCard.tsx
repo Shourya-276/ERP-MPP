@@ -4,11 +4,8 @@ import saraIllustration from '@/assets/sara-illustration.png';
 const GreetingCard: React.FC = () => {
   return (
     <div
-      className="greeting-gradient rounded-3xl p-5 relative flex-1"
+      className="greeting-gradient rounded-3xl p-5 relative flex-1 h-full"
       style={{
-        minWidth: '500px',
-        height: '200px',
-        borderTop: '1px solid #FFF08580',
         boxShadow: '0px 8px 10px -6px #FFF08580, 0px 20px 25px -12px #FFF08580'
       }}
     >

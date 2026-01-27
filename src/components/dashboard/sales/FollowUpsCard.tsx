@@ -10,7 +10,7 @@ interface FollowUpItemProps {
 }
 
 const FollowUpItem: React.FC<FollowUpItemProps> = ({ label, sublabel, count, bgStyle }) => (
-  <div 
+  <div
     className="rounded-xl p-3 flex items-center justify-between cursor-pointer hover:opacity-90 transition-opacity"
     style={bgStyle}
   >
@@ -28,17 +28,24 @@ const FollowUpItem: React.FC<FollowUpItemProps> = ({ label, sublabel, count, bgS
 const FollowUpsCard: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl p-4 border">
-      <div className="flex items-center gap-2 mb-4">
-        <Phone className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold">Follow Ups</h3>
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: 'linear-gradient(180deg, #EAF3FF 0%, #D4E7FF 100%)' }}
+        >
+          <Phone className="w-5 h-5 text-[#2B7FFF]" />
+        </div>
+        <h3 className="text-base font-bold text-foreground">Follow Ups</h3>
       </div>
 
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-xs text-muted-foreground">Completion Rate</span>
-          <span className="text-xs font-medium">76%</span>
+          <span className="text-sm font-bold text-[#2B7FFF]">76%</span>
         </div>
-        <Progress value={76} className="h-2" />
+        <div className="h-2 w-full bg-[#E4F0FF] rounded-full overflow-hidden">
+          <div className="h-full bg-[#2B7FFF] rounded-full" style={{ width: '76%' }} />
+        </div>
       </div>
 
       <div className="space-y-3">

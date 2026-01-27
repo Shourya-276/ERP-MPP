@@ -29,7 +29,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggle }) => {
 
     if (success) {
       toast.success('Welcome back, Sara!');
-      navigate('/dashboard');
+      if (email.toLowerCase().includes('recep')) {
+        navigate('/receptionist');
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       toast.error('Invalid credentials. Try recep@gmail.com / 1234');
     }

@@ -37,7 +37,10 @@ const SalesDashboard: React.FC = () => {
             <div className="flex-1">
               <SalesGreetingCard />
             </div>
-            <CalendarWidget />
+            {/* Calendar Widget wrapper with fixed width wider than Alerts */}
+            <div className="w-[350px] h-[180px] shrink-0">
+              <CalendarWidget />
+            </div>
           </div>
 
           {/* Stats + Alerts row - side by side */}
@@ -45,20 +48,26 @@ const SalesDashboard: React.FC = () => {
             <div className="flex-1">
               <SalesStatCards />
             </div>
-            <div className="w-60 shrink-0">
+            {/* Alerts wrapper narrower than Calendar to make Stats wider than Greeting */}
+            <div className="w-[260px] shrink-0">
               <AlertsCard />
             </div>
           </div>
 
           {/* Follow Ups, Site Visits, Lead Engagement */}
-          <div className="grid grid-cols-3 gap-4 mb-5">
-            <FollowUpsCard />
-            <SiteVisitsCard />
-            <LeadEngagementCard />
+          {/* Follow Ups, Site Visits, Lead Engagement Container */}
+          <div className="bg-[#C8E1FF80] p-4 rounded-[20px] mb-5">
+            <div className="grid grid-cols-3 gap-4">
+              <FollowUpsCard />
+              <SiteVisitsCard />
+              <LeadEngagementCard />
+            </div>
           </div>
 
           {/* Outcome Tracking Chart */}
-          <OutcomeTrackingChart />
+          <div className="bg-[#CDFDD280] p-4 rounded-[20px]">
+            <OutcomeTrackingChart />
+          </div>
         </main>
       </div>
     </div>

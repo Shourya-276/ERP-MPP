@@ -9,6 +9,7 @@ import SalesDashboard from "./pages/sales/Dashboard";
 import NotFound from "./pages/NotFound";
 
 import ReceptionistDashboard from "./pages/receptionist/Dashboard";
+import IpadView from "./pages/receptionist/IpadView";
 import NewLeadForm from "./pages/receptionist/new-lead/NewLeadForm";
 
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/dashboard" element={<SalesDashboard />} />
             <Route path="/sales" element={<SalesDashboard />} />
             <Route path="/receptionist" element={<ReceptionistDashboard />} />
+            <Route path="/receptionist/ipad-view" element={<IpadView />} />
             <Route path="/receptionist/new-lead" element={<NewLeadForm />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

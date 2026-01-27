@@ -11,7 +11,7 @@ interface VisitItemProps {
 }
 
 const VisitItem: React.FC<VisitItemProps> = ({ label, sublabel, count, bgStyle, badge }) => (
-  <div 
+  <div
     className="rounded-xl p-3 flex items-center justify-between cursor-pointer hover:opacity-90 transition-opacity relative"
     style={bgStyle}
   >
@@ -34,17 +34,24 @@ const VisitItem: React.FC<VisitItemProps> = ({ label, sublabel, count, bgStyle, 
 const SiteVisitsCard: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl p-4 border">
-      <div className="flex items-center gap-2 mb-4">
-        <MapPin className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold">Site Visits</h3>
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: 'linear-gradient(180deg, #F3EDFF 0%, #E9DCFF 100%)' }}
+        >
+          <MapPin className="w-5 h-5 text-[#8B5CF6]" />
+        </div>
+        <h3 className="text-base font-bold text-foreground">Site Visits</h3>
       </div>
 
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-xs text-muted-foreground">Completion Rate</span>
-          <span className="text-xs font-medium">90%</span>
+          <span className="text-sm font-bold text-[#8B5CF6]">90%</span>
         </div>
-        <Progress value={90} className="h-2" />
+        <div className="h-2 w-full bg-[#F0E8FF] rounded-full overflow-hidden">
+          <div className="h-full bg-[#8B5CF6] rounded-full" style={{ width: '90%' }} />
+        </div>
       </div>
 
       <div className="space-y-3">

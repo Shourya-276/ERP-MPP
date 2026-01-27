@@ -8,17 +8,17 @@ interface AlertItemProps {
   iconBg: string;
 }
 
-const AlertItem: React.FC<AlertItemProps> = ({ icon, label, count, iconBg }) => (
-  <div className="flex items-center justify-between py-3 border-b border-red-100 last:border-b-0">
-    <div className="flex items-center gap-3">
-      <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${iconBg}`}>
-        {icon}
+const AlertItem: React.FC<AlertItemProps> = ({ icon, label, count }) => (
+  <div className="flex items-center justify-between pl-3 py-3 pr-0 mb-3 bg-white/40 rounded-2xl shadow-sm border border-white/20 last:mb-0">
+    <div className="flex items-center gap-3 flex-1 min-w-0">
+      <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-white/80 to-white/20 shadow-inner border border-white/40 text-red-500">
+        {React.cloneElement(icon as React.ReactElement, { className: "w-5 h-5 text-red-500" })}
       </div>
-      <span className="text-sm text-foreground">{label}</span>
+      <span className="text-sm font-bold text-gray-800 leading-tight">{label}</span>
     </div>
-    <div className="flex items-center gap-1">
-      <span className="text-lg font-bold text-orange-600">{count}</span>
-      <ChevronRight className="w-4 h-4 text-orange-500" />
+    <div className="flex items-center gap-0.5 shrink-0 ml-4">
+      <span className="text-2xl font-bold text-[#DC2626]">{count}</span>
+      <ChevronRight className="w-6 h-6 text-[#DC2626]" />
     </div>
   </div>
 );
@@ -27,7 +27,7 @@ const AlertsCard: React.FC = () => {
   return (
     <div className="space-y-3">
       {/* My Achieved Target */}
-      <div 
+      <div
         className="rounded-2xl p-4"
         style={{
           background: 'linear-gradient(108.4deg, rgba(32, 219, 29, 0.2) 38.52%, rgba(195, 255, 194, 0.2) 101.88%)',
@@ -49,32 +49,32 @@ const AlertsCard: React.FC = () => {
       </div>
 
       {/* Alerts */}
-      <div 
-        className="rounded-2xl p-4"
+      <div
+        className="rounded-2xl p-5 min-h-[350px] flex flex-col"
         style={{
           background: 'linear-gradient(152.12deg, rgba(255, 41, 21, 0.3) 41.15%, rgba(232, 189, 189, 0.3) 90.76%)',
         }}
       >
-        <h3 className="text-base font-semibold mb-2">Alerts</h3>
-        
-        <div>
+        <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Alerts</h3>
+
+        <div className="flex-1 space-y-3">
           <AlertItem
-            icon={<FileText className="w-4 h-4 text-red-500" />}
+            icon={<FileText />}
             label="Pending Registrations"
             count={20}
-            iconBg="bg-red-100"
+            iconBg=""
           />
           <AlertItem
-            icon={<CreditCard className="w-4 h-4 text-green-600" />}
+            icon={<CreditCard />}
             label="Pending Payments"
             count={8}
-            iconBg="bg-green-100"
+            iconBg=""
           />
           <AlertItem
-            icon={<XCircle className="w-4 h-4 text-red-500" />}
+            icon={<XCircle />}
             label="Placeholder"
             count={3}
-            iconBg="bg-red-100"
+            iconBg=""
           />
         </div>
       </div>

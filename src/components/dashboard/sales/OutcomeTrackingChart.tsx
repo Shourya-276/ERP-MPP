@@ -26,11 +26,14 @@ const OutcomeTrackingChart: React.FC = () => {
         <h3 className="text-sm font-semibold">Outcome tracking based on Source</h3>
         <div className="flex items-center gap-2">
           {['All', 'Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
-            <Button 
-              key={q} 
-              variant={i === 0 ? 'default' : 'outline'} 
-              size="sm" 
-              className={`h-7 px-3 text-xs ${i === 0 ? 'bg-[#4A1D59]' : ''}`}
+            <Button
+              key={q}
+              variant="ghost"
+              size="sm"
+              className={`h-7 px-3 text-xs rounded-full border-[0.99px] border-[#DDDDDD] hover:bg-[#FFF7CE]/50 ${i === 0
+                  ? 'bg-[#FFF7CE] text-black hover:bg-[#FFF7CE]'
+                  : 'bg-white text-black hover:bg-gray-50'
+                }`}
             >
               {q}
             </Button>
@@ -54,23 +57,23 @@ const OutcomeTrackingChart: React.FC = () => {
         <div className="flex-1 h-72">
           <div className="flex items-center gap-4 mb-3 text-xs">
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <span className="w-2 h-2 rounded-full bg-[#93C5FD]"></span>
               Marketing
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span className="w-2 h-2 rounded-full bg-[#C4B5FD]"></span>
               Pre-Sales
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+              <span className="w-2 h-2 rounded-full bg-[#6EE7B7]"></span>
               Referral
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span className="w-2 h-2 rounded-full bg-[#FD7474]"></span>
               Channel Partner
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+              <span className="w-2 h-2 rounded-full bg-[#FFCC75]"></span>
               Developer Reference
             </div>
           </div>
@@ -80,11 +83,11 @@ const OutcomeTrackingChart: React.FC = () => {
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="Marketing" fill="#22c55e" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="PreSales" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Referral" fill="#a855f7" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="ChannelPartner" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="DeveloperReference" fill="#ec4899" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Marketing" fill="#93C5FD" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="PreSales" fill="#C4B5FD" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Referral" fill="#6EE7B7" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="ChannelPartner" fill="#FD7474" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="DeveloperReference" fill="#FFCC75" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
