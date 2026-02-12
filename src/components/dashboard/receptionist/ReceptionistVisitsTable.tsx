@@ -43,9 +43,15 @@ export const ReceptionistVisitsTable: React.FC = () => {
         setIsLoading(true);
         try {
             const response = await api.get('/leads/recent');
-            setLeads(response.data);
+            if (Array.isArray(response.data)) {
+                setLeads(response.data);
+            } else {
+                console.error('API did not return an array:', response.data);
+                setLeads([]);
+            }
         } catch (error) {
             console.error('Failed to fetch leads:', error);
+            setLeads([]);
         } finally {
             setIsLoading(false);
         }
@@ -69,7 +75,7 @@ export const ReceptionistVisitsTable: React.FC = () => {
         return status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700';
     };
 
-    const filteredLeads = leads.filter(lead => {
+    const filteredLeads = Array.isArray(leads) ? leads.filter(lead => {
         const matchesSearch =
             lead.friendlyId.toLowerCase().includes(searchTerm.toLowerCase()) ||
             lead.customerName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -79,7 +85,7 @@ export const ReceptionistVisitsTable: React.FC = () => {
             (statusFilter === 'Revisit' && lead.status === 'REVISIT');
 
         return matchesSearch && matchesStatus;
-    });
+    }) : [];
 
     const handleDownloadExcel = () => {
         const dataToExport = filteredLeads.map(lead => ({
