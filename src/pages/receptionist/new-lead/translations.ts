@@ -28,16 +28,17 @@ export const translations = {
             clear: "Clear",
         },
         personalInfo: {
-            date: "Date",
+            dob: "Date of Birth",
             photo: "Photo",
             takePhoto: "Take a photo",
-            title: "Title",
+            title: "Preffix",
             firstName: "First Name",
             middle: "Middle",
             lastName: "Last Name",
             gender: "Gender",
             age: "Age",
             nationality: "Nationality",
+            aadhar: "Aadhar Card Number",
             email: "Email Address",
             phone: "Phone Number",
             addAlternateInfo: "+ Add alternate number",
@@ -45,15 +46,32 @@ export const translations = {
             spouseName: "Spouse Name",
             ifApplicable: "If applicable",
             select: "Select",
+            selectStatus: "Select Status",
             options: {
-                male: "Male",
-                female: "Female",
-                other: "Other",
-                indian: "Indian",
-                nri: "NRI",
-                foreigner: "Foreigner",
-                single: "Single",
-                married: "Married"
+                title: {
+                    mr: "Mr",
+                    mrs: "Mrs",
+                    ms: "Ms",
+                    dr: "Dr"
+                },
+                gender: {
+                    male: "Male",
+                    female: "Female",
+                    other: "Other"
+                },
+                nationality: {
+                    indian: "Indian",
+                    american: "American",
+                    british: "British",
+                    canadian: "Canadian",
+                    other: "Other"
+                },
+                maritalStatus: {
+                    single: "Single",
+                    married: "Married",
+                    divorced: "Divorced",
+                    widowed: "Widowed"
+                }
             }
         },
         contactWork: {
@@ -151,7 +169,7 @@ export const translations = {
             clear: "साफ करा",
         },
         personalInfo: {
-            date: "तारीख",
+            dob: "जन्म तारीख",
             photo: "फोटो",
             takePhoto: "फोटो घ्या",
             title: "शीर्षक",
@@ -161,6 +179,7 @@ export const translations = {
             gender: "लिंग",
             age: "वय",
             nationality: "राष्ट्रीयत्व",
+            aadhar: "आधार कार्ड क्रमांक",
             email: "ईमेल पत्ता",
             phone: "फोन नंबर",
             addAlternateInfo: "+ पर्यायी नंबर जोडा",
@@ -168,15 +187,32 @@ export const translations = {
             spouseName: "जोडीदाराचे नाव",
             ifApplicable: "लागू असल्यास",
             select: "निवडा",
+            selectStatus: "स्थिती निवडा",
             options: {
-                male: "पुरुष",
-                female: "स्त्री",
-                other: "इतर",
-                indian: "भारतीय",
-                nri: "अनिवासी भारतीय (NRI)",
-                foreigner: "परदेशी",
-                single: "अविवाहित",
-                married: "विवाहित"
+                title: {
+                    mr: "श्री",
+                    mrs: "श्रीमती",
+                    ms: "कुमारी",
+                    dr: "डॉ."
+                },
+                gender: {
+                    male: "पुरुष",
+                    female: "स्त्री",
+                    other: "इतर"
+                },
+                nationality: {
+                    indian: "भारतीय",
+                    american: "अमेरिकन",
+                    british: "ब्रिटीश",
+                    canadian: "कॅनेडियन",
+                    other: "इतर"
+                },
+                maritalStatus: {
+                    single: "अविवाहित",
+                    married: "विवाहित",
+                    divorced: "घटस्फोटित",
+                    widowed: "विधवा/विदुर"
+                }
             }
         },
         contactWork: {

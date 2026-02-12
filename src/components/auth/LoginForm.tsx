@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggle }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,21 +25,29 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggle }) => {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const success = login(email, password);
+    const success = await login(email, password);
 
     if (success) {
-      toast.success('Welcome back, Sara!');
-      if (email.toLowerCase().includes('recep')) {
-        navigate('/receptionist');
-      } else {
-        navigate('/dashboard');
-      }
+      toast.success('Welcome back!');
     } else {
-      toast.error('Invalid credentials. Try recep@gmail.com / 1234');
+      toast.error('Invalid credentials');
     }
 
     setIsLoading(false);
   };
+
+  // Handle navigation in a separate useEffect to ensure user state is updated
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'RECEPTIONIST_2') {
+        navigate('/receptionist/ipad-view');
+      } else if (user.role === 'RECEPTIONIST') {
+        navigate('/receptionist');
+      } else if (user.role === 'SALES_EXECUTIVE') {
+        navigate('/dashboard');
+      }
+    }
+  }, [user, navigate]);
 
   return (
     <div className="space-y-6">

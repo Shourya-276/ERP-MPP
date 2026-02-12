@@ -98,8 +98,7 @@ export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({ open, onOp
                 {/* Header */}
                 <div className="bg-[#4A1D59] p-4 flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-2">
-                        {/* Use img tag directly if import issues, but assuming import works from Dashboard context */}
-                        <img src={megaplexLogo} alt="Megaplex" className="h-8 object-contain" />
+                        {/* <img src={megaplexLogo} alt="Megaplex" className="h-8 object-contain" /> */}
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="text-white font-medium">Feedback Form</span>

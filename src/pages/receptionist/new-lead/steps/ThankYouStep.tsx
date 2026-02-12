@@ -5,17 +5,12 @@ import { translations, Language } from '../translations';
 
 interface ThankYouStepProps {
     language: Language;
+    leadId?: string;
 }
 
-/**
- * @component ThankYouStep
- * @description Final success screen.
- * Triggers a confetti animation on mount to celebrate completion.
- */
-const ThankYouStep: React.FC<ThankYouStepProps> = ({ language }) => {
+const ThankYouStep: React.FC<ThankYouStepProps> = ({ language, leadId }) => {
     const t = translations[language].thankYou;
 
-    // Trigger confetti side-effect on mount
     useEffect(() => {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -51,18 +46,20 @@ const ThankYouStep: React.FC<ThankYouStepProps> = ({ language }) => {
 
     return (
         <div className="flex flex-col items-center justify-center h-full pt-10 animate-in zoom-in duration-500">
-
-            {/* Illustration */}
             <div className="mb-8">
                 <img
                     src={thankyouIllustration}
                     alt="Thank You Illustration"
-                    className="h-[400px] w-auto object-contain"
+                    className="h-[300px] w-auto object-contain"
                 />
             </div>
 
+            <div className="bg-[#4A1D59] text-white px-6 py-2 rounded-full mb-6 font-bold shadow-lg animate-bounce">
+                Lead ID: {leadId || 'GEN-0001'}
+            </div>
+
             <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
-                {t.title} <span className="text-[#4A1D59]">Dr. Shreya Patil!</span>
+                {t.title}
             </h2>
 
             <p className="text-xl font-medium text-foreground/80 mb-6 text-center">

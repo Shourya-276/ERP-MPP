@@ -8,30 +8,27 @@ import { Trash2, X } from 'lucide-react';
 import { translations, Language } from '../translations';
 
 interface FeedbackStepProps {
-    onNext: () => void;
+    onNext: (data: any) => void;
     onBack: () => void;
     language: Language;
+    initialData: any;
+    isSubmitting?: boolean;
 }
 
-/**
- * @component FeedbackStep
- * @description Step 4: Collects marketing attribution (online/offline sources) and user signature.
- * 
- * Dependencies:
- * - react-signature-canvas: For capturing the digital signature.
- */
-const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language }) => {
-    // Stores list of selected marketing sources (e.g., ['Facebook', 'Newspaper'])
-    const [selectedSources, setSelectedSources] = useState<string[]>([]);
+const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, initialData, isSubmitting }) => {
+    const [selectedSources, setSelectedSources] = useState<string[]>(initialData.selectedSources || []);
+    const [showChannelPartner, setShowChannelPartner] = useState(initialData.showChannelPartner || false);
 
-    // Toggles visibility of Channel Partner/Broker input fields
-    const [showChannelPartner, setShowChannelPartner] = useState(false);
+    const [formData, setFormData] = useState({
+        refName: initialData.refName || '',
+        refContact: initialData.refContact || '',
+        cpFirm: initialData.cpFirm || '',
+        cpExec: initialData.cpExec || '',
+        cpPhone: initialData.cpPhone || ''
+    });
 
-    // Controls Signature Modal
     const [isSignatureOpen, setIsSignatureOpen] = useState(false);
-
-    // Stores captured signature as Data URL
-    const [signature, setSignature] = useState<string | null>(null);
+    const [signature, setSignature] = useState<string | null>(initialData.signature || null);
     const sigCanvas = useRef<SignatureCanvas>(null);
 
     const t = translations[language].feedback;
@@ -56,7 +53,6 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
         try {
             if (sigCanvas.current) {
                 // Use getCanvas() instead of getTrimmedCanvas() to ensure capturing
-                // even if trimming logic is failing or aggressive
                 const dataUrl = sigCanvas.current.getCanvas().toDataURL('image/png');
                 setSignature(dataUrl);
             }
@@ -64,6 +60,28 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
             console.error("Error saving signature:", error);
         }
         setIsSignatureOpen(false);
+    };
+
+    const handleNumericChange = (field: string, value: string, max: number = 10) => {
+        const digitsOnly = value.replace(/\D/g, '').slice(0, max);
+        setFormData(prev => ({ ...prev, [field]: digitsOnly }));
+    };
+
+    const isStepValid = () => {
+        const hasSource = selectedSources.length > 0;
+        const hasSignature = !!signature;
+
+        let refValid = true;
+        if (selectedSources.includes('Reference')) {
+            refValid = !!(formData.refName && formData.refContact.length >= 10);
+        }
+
+        let cpValid = true;
+        if (showChannelPartner) {
+            cpValid = !!(formData.cpFirm && formData.cpExec && formData.cpPhone.length === 10);
+        }
+
+        return hasSource && hasSignature && refValid && cpValid;
     };
 
     /**
@@ -136,10 +154,20 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
                 {selectedSources.includes('Reference') && (
                     <div className="grid grid-cols-2 gap-8 pt-2">
                         <div className="relative border-b border-[#4A1D59]">
-                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder={t.nameOfReference} />
+                            <input
+                                className="w-full py-2 outline-none text-sm placeholder:text-gray-400"
+                                placeholder={t.nameOfReference}
+                                value={formData.refName}
+                                onChange={(e) => setFormData(prev => ({ ...prev, refName: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
+                            />
                         </div>
                         <div className="relative border-b border-[#4A1D59]">
-                            <input className="w-full py-2 outline-none text-sm placeholder:text-gray-400" placeholder={t.contact} />
+                            <input
+                                className="w-full py-2 outline-none text-sm placeholder:text-gray-400"
+                                placeholder={t.contact}
+                                value={formData.refContact}
+                                onChange={(e) => handleNumericChange('refContact', e.target.value)}
+                            />
                         </div>
                     </div>
                 )}
@@ -162,15 +190,30 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
 
                 {showChannelPartner && (
                     <div className="mt-4 grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
-                        <Input placeholder={t.cpFirm} className="bg-white border-gray-200" />
-                        <Input placeholder={t.execName} className="bg-white border-gray-200" />
+                        <Input
+                            placeholder={t.cpFirm}
+                            className="bg-white border-gray-200"
+                            value={formData.cpFirm}
+                            onChange={(e) => setFormData(prev => ({ ...prev, cpFirm: e.target.value }))}
+                        />
+                        <Input
+                            placeholder={t.execName}
+                            className="bg-white border-gray-200"
+                            value={formData.cpExec}
+                            onChange={(e) => setFormData(prev => ({ ...prev, cpExec: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
+                        />
                         <div className="col-span-2 text-xs text-[#4A1D59]">{t.addFirm}</div>
 
                         <div className="col-span-2 flex gap-4">
                             <div className="w-20 bg-white border border-gray-200 rounded-md flex items-center justify-center gap-1 text-xs">
                                 <span>🇮🇳</span> +91
                             </div>
-                            <Input placeholder={translations[language].personalInfo.phone} className="flex-1 bg-white border-gray-200" />
+                            <Input
+                                placeholder={translations[language].personalInfo.phone}
+                                className="flex-1 bg-white border-gray-200"
+                                value={formData.cpPhone}
+                                onChange={(e) => handleNumericChange('cpPhone', e.target.value)}
+                            />
                         </div>
                     </div>
                 )}
@@ -189,7 +232,7 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
             {/* Signature */}
             <div className="flex justify-end">
                 <div className="w-64 space-y-2">
-                    <label className="text-xs font-bold text-[#4A1D59]">{t.signature}</label>
+                    <label className="text-xs font-bold text-[#4A1D59]">{t.signature}<span className="text-red-500">*</span></label>
 
                     {!signature ? (
                         <div
@@ -252,12 +295,21 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language })
             {/* Footer Actions */}
             <div className="flex justify-between items-center mt-12 pt-4">
                 <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
-                <Button
-                    onClick={onNext}
-                    className="bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium"
-                >
-                    {tc.continue}
-                </Button>
+                <div className="flex flex-col items-end gap-2">
+                    {!isStepValid() && (
+                        <p className="text-[10px] text-red-500 font-medium">Please provide all required information (*)</p>
+                    )}
+                    <Button
+                        onClick={() => onNext({ ...formData, selectedSources, showChannelPartner, signature })}
+                        disabled={!isStepValid() || isSubmitting}
+                        className={cn(
+                            "bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium transition-all",
+                            (!isStepValid() || isSubmitting) && "opacity-50 cursor-not-allowed bg-gray-400"
+                        )}
+                    >
+                        {isSubmitting ? 'Submitting...' : tc.continue}
+                    </Button>
+                </div>
             </div>
         </div>
     );

@@ -39,12 +39,12 @@ const IpadView: React.FC = () => {
         <div className="min-h-screen bg-white flex flex-col">
             {/* Header */}
             <header className="bg-[#4A1D59] p-4 shadow-md">
-                <div className="container mx-auto">
-                    <img src={megaplexLogo} alt="Megaplex Prime" className="h-12 object-contain" />
+                <div className="w-full px-6">
+                    {/* <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain" /> */}
                 </div>
             </header>
 
-            <main className="flex-1 p-6 container mx-auto max-w-5xl">
+            <main className="flex-1 w-full px-6 py-6 mx-auto xl:container">
                 {/* Search Bar Component */}
                 <IpadSearch onGiveFeedback={() => setIsFeedbackModalOpen(true)} />
 

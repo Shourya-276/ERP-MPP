@@ -10,7 +10,7 @@ const DashboardHeader: React.FC = () => {
     <header className="h-16 bg-[#351C43] flex items-center justify-between px-6 shrink-0 border-b border-white/10 relative z-50">
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain" />
+        {/* <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain" /> */}
       </div>
 
       {/* Search */}

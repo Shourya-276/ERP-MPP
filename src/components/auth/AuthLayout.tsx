@@ -28,10 +28,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-white/5 blur-xl" />
         <div className="absolute bottom-40 right-20 w-32 h-32 rounded-full bg-white/5 blur-2xl" />
-        
+
         {/* Logo */}
-        <div className="mb-8 animate-fade-in">
-          <img src={megaplexLogo} alt="Megaplex Prime" className="h-24 object-contain" />
+        <div className="mb-8 animate-fade-in invisible">
+          {/* <img src={megaplexLogo} alt="Megaplex Prime" className="h-24 object-contain" /> */}
         </div>
 
         {/* Tagline */}

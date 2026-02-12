@@ -4,28 +4,26 @@ import { cn } from '@/lib/utils';
 import { translations, Language } from '../translations';
 
 interface PropertyDetailsStepProps {
-    onNext: () => void;
+    onNext: (data: any) => void;
     onBack: () => void;
     language: Language;
+    initialData: any;
 }
 
-/**
- * @component PropertyDetailsStep
- * @description Step 3 of the New Lead Form.
- * Captures user preferences like Purpose, Configuration, Budget, Possession, etc.
- * Uses a pill/button selection UI pattern.
- */
-const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBack, language }) => {
-    // Selection states
-    const [purpose, setPurpose] = useState('Primary Residence');
-    const [config, setConfig] = useState('2 BHK');
-    const [budget, setBudget] = useState('71 lacs - 80 lacs');
-    const [possession, setPossession] = useState('2028');
-    const [floor, setFloor] = useState('Upper level');
-    const [view, setView] = useState('Mangrove view');
+const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBack, language, initialData }) => {
+    const [purpose, setPurpose] = useState(initialData.purpose || '');
+    const [config, setConfig] = useState(initialData.config || '');
+    const [budget, setBudget] = useState(initialData.budget || '');
+    const [possession, setPossession] = useState(initialData.possession || '');
+    const [floor, setFloor] = useState(initialData.floor || '');
+    const [view, setView] = useState(initialData.view || '');
 
     const t = translations[language].propertyDetails;
     const tc = translations[language].common;
+
+    const isStepValid = () => {
+        return !!(purpose && config && budget && possession && floor);
+    };
 
     // Mapping for translated labels for non-numeric options
     const purposeMap: Record<string, string> = {
@@ -189,12 +187,21 @@ const PropertyDetailsStep: React.FC<PropertyDetailsStepProps> = ({ onNext, onBac
             {/* Footer Actions */}
             <div className="flex justify-between items-center mt-12 pt-4">
                 <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
-                <Button
-                    onClick={onNext}
-                    className="bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium"
-                >
-                    {tc.continue}
-                </Button>
+                <div className="flex flex-col items-end gap-2">
+                    {!isStepValid() && (
+                        <p className="text-[10px] text-red-500 font-medium">Please select all required options (*)</p>
+                    )}
+                    <Button
+                        onClick={() => onNext({ purpose, config, budget, possession, floor, view })}
+                        disabled={!isStepValid()}
+                        className={cn(
+                            "bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium transition-all",
+                            !isStepValid() && "opacity-50 cursor-not-allowed bg-gray-400"
+                        )}
+                    >
+                        {tc.continue}
+                    </Button>
+                </div>
             </div>
         </div>
     );

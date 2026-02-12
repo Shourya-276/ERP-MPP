@@ -49,7 +49,7 @@ const ReceptionistDashboard: React.FC = () => {
                         {/* Middle Section: Lead Overview Stats with Filters */}
                         {/* Negative margin used to visually pull this section closer to the cards above */}
                         <div className="relative z-10">
-                            <div className="flex flex-col gap-4 mb-6 -mt-16">
+                            <div className="flex flex-col gap-4 mb-6 -mt-10">
                                 <div>
                                     <h2 className="text-2xl font-bold text-[#1a1a1a]">Your Lead Overview</h2>
                                     <p className="text-sm text-gray-500 mt-1">Showing data for the last 30 days</p>
