@@ -5,6 +5,7 @@ const router = Router();
 
 // Dashboard data
 router.get('/recent', leadController.getRecentLeads);
+router.get('/stats', leadController.getReceptionistStats);
 
 // Lead Actions
 router.post('/', leadController.createLead);

@@ -164,4 +164,31 @@ export class LeadService {
             }
         });
     }
+
+    static async getReceptionistStats() {
+        const counts = await prisma.lead.groupBy({
+            by: ['status'],
+            _count: {
+                _all: true
+            }
+        });
+
+        const visitCount = counts.find(c => c.status === LeadStatus.VISIT)?._count._all || 0;
+        const revisitCount = counts.find(c => c.status === LeadStatus.REVISIT)?._count._all || 0;
+
+        const assignedCount = await prisma.lead.count({
+            where: { assignedToId: { not: null } }
+        });
+
+        const totalCount = await prisma.lead.count();
+        const pendingCount = totalCount - assignedCount;
+
+        return {
+            visitCount,
+            revisitCount,
+            totalVisitsRevisits: visitCount + revisitCount,
+            assignedCount,
+            pendingCount
+        };
+    }
 }

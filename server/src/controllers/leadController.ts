@@ -48,3 +48,13 @@ export const getRecentLeads = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch leads' });
     }
 };
+
+export const getReceptionistStats = async (req: Request, res: Response) => {
+    try {
+        const stats = await LeadService.getReceptionistStats();
+        res.json(stats);
+    } catch (error: any) {
+        console.error('Fetch stats error:', error);
+        res.status(500).json({ error: 'Failed to fetch statistics' });
+    }
+};
