@@ -32,6 +32,7 @@ interface PersonalInfoStepProps {
 
 const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, initialData }) => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [cameraError, setCameraError] = useState<string | null>(null);
     const [photo, setPhoto] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
@@ -58,25 +59,47 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
     const t = translations[language].personalInfo;
     const tc = translations[language].common;
 
-    const startCamera = async () => {
-        setIsCameraOpen(true);
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
+    /* Camera stream management */
+    React.useEffect(() => {
+        let stream: MediaStream | null = null;
+
+        const startCamera = async () => {
+            if (!isCameraOpen) return;
+
+            // Check for secure context (HTTPS)
+            if (!window.isSecureContext) {
+                setCameraError("Camera requires a secure connection (HTTPS). Please contact your administrator.");
+                return;
             }
-        } catch (err) {
-            console.error("Error accessing camera:", err);
-            setIsCameraOpen(false);
+
+            try {
+                setCameraError(null);
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' }
+                });
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                }
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                setCameraError("Could not access camera. Please ensure permissions are granted.");
+            }
+        };
+
+        if (isCameraOpen) {
+            startCamera();
         }
-    };
+
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [isCameraOpen]);
 
     const stopCamera = () => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-        }
         setIsCameraOpen(false);
+        setCameraError(null);
     };
 
     const takePhoto = () => {
@@ -167,7 +190,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
 
                     {!photo ? (
                         <div
-                            onClick={startCamera}
+                            onClick={() => setIsCameraOpen(true)}
                             className="border hover:bg-gray-50 transition cursor-pointer border-dashed border-gray-300 rounded-lg h-10 flex items-center justify-center gap-2 text-sm text-gray-500"
                         >
                             <Camera className="w-4 h-4" />
@@ -190,14 +213,37 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
                 <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
                     <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-black border-none text-white">
                         <div className="relative aspect-video bg-black flex items-center justify-center">
-                            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-                            <canvas ref={canvasRef} className="hidden" />
+                            {cameraError ? (
+                                <div className="p-6 text-center">
+                                    <p className="text-red-400 text-sm font-medium">{cameraError}</p>
+                                    <Button
+                                        variant="outline"
+                                        onClick={stopCamera}
+                                        className="mt-4 border-white/20 text-white hover:bg-white/10"
+                                    >
+                                        Close
+                                    </Button>
+                                </div>
+                            ) : (
+                                <>
+                                    <video
+                                        ref={videoRef}
+                                        autoPlay
+                                        playsInline
+                                        muted
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <canvas ref={canvasRef} className="hidden" />
+                                </>
+                            )}
                         </div>
                         <div className="p-4 flex justify-between items-center bg-zinc-900">
                             <Button variant="ghost" onClick={stopCamera} className="text-gray-400 hover:text-white">{tc.cancel}</Button>
-                            <Button onClick={takePhoto} className="rounded-full w-12 h-12 p-0 border-4 border-white bg-transparent hover:bg-white/20 transition-all">
-                                <div className="w-8 h-8 bg-red-500 rounded-full" />
-                            </Button>
+                            {!cameraError && (
+                                <Button onClick={takePhoto} className="rounded-full w-12 h-12 p-0 border-4 border-white bg-transparent hover:bg-white/20 transition-all">
+                                    <div className="w-8 h-8 bg-red-500 rounded-full" />
+                                </Button>
+                            )}
                             <div className="w-16" /> {/* Spacer */}
                         </div>
                     </DialogContent>

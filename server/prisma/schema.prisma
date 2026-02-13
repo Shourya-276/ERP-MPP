@@ -29,8 +29,10 @@ enum LeadSource {
   SOCIAL_MEDIA
   GOOGLE
   WEBSITE
+  PROPERTY_PORTAL
   ADVERTISEMENT
   REFERRAL
+  CHANNEL_PARTNER
   OTHER
 }
 
@@ -104,6 +106,7 @@ model Lead {
   cpExec          String?
   cpPhone         String?
   signature       String?    @db.LongText // Base64 signature
+  consent         Boolean    @default(true)
   
   // Metadata
   status          LeadStatus @default(VISIT)

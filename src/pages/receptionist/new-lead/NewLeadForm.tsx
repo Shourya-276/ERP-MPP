@@ -60,9 +60,13 @@ const NewLeadForm: React.FC = () => {
         setFormData((prev: any) => ({ ...prev, ...newData }));
     };
 
-    const handleNext = () => {
+    const handleNext = (stepData?: any) => {
+        if (stepData) {
+            updateData(stepData);
+        }
+
         if (currentStep === 4) {
-            submitForm();
+            submitForm(stepData);
         } else {
             setCurrentStep((prev) => Math.min(prev + 1, 5));
         }
@@ -72,10 +76,12 @@ const NewLeadForm: React.FC = () => {
         setCurrentStep((prev) => Math.max(prev - 1, 1));
     };
 
-    const submitForm = async () => {
+    const submitForm = async (finalData?: any) => {
         setIsSubmitting(true);
         try {
-            const response = await api.post('/leads', formData);
+            // Use finalData to avoid stale state issues in the final step
+            const dataToSubmit = finalData ? { ...formData, ...finalData } : formData;
+            const response = await api.post('/leads', dataToSubmit);
             updateData({ friendlyId: response.data.lead.friendlyId });
             setCurrentStep(5); // Show Thank You
             toast.success('Lead created successfully!');
@@ -180,14 +186,14 @@ const NewLeadForm: React.FC = () => {
                 <div className="flex-1 bg-white">
                     {currentStep === 1 && (
                         <PersonalInfoStep
-                            onNext={(data) => { updateData(data); handleNext(); }}
+                            onNext={handleNext}
                             language={language}
                             initialData={formData}
                         />
                     )}
                     {currentStep === 2 && (
                         <ContactWorkInfoStep
-                            onNext={(data) => { updateData(data); handleNext(); }}
+                            onNext={handleNext}
                             onBack={handleBack}
                             language={language}
                             initialData={formData}
@@ -195,7 +201,7 @@ const NewLeadForm: React.FC = () => {
                     )}
                     {currentStep === 3 && (
                         <PropertyDetailsStep
-                            onNext={(data) => { updateData(data); handleNext(); }}
+                            onNext={handleNext}
                             onBack={handleBack}
                             language={language}
                             initialData={formData}
@@ -203,7 +209,7 @@ const NewLeadForm: React.FC = () => {
                     )}
                     {currentStep === 4 && (
                         <FeedbackStep
-                            onNext={(data) => { updateData(data); handleNext(); }}
+                            onNext={handleNext}
                             onBack={handleBack}
                             language={language}
                             initialData={formData}

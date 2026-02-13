@@ -30,10 +30,29 @@ export class LeadService {
         // Clean data and build searchable customer name
         const customerName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
 
-        // Map frontend source to backend enum
+        // Map frontend source to backend enum based on user selection
         let sourceEnum: LeadSource = LeadSource.WALK_IN;
-        if (data.source && Object.values(LeadSource).includes(data.source)) {
-            sourceEnum = data.source as LeadSource;
+        const selected = Array.isArray(data.selectedSources) ? data.selectedSources[0] : null;
+
+        if (data.showChannelPartner) {
+            sourceEnum = LeadSource.CHANNEL_PARTNER;
+        } else if (selected) {
+            const socialMedia = ['Facebook', 'Instagram', 'Youtube', 'Reels'];
+            const ads = ['Newspaper Ads', 'Billboards', 'Station Hoarding', 'Site Branding', 'Pole Branding'];
+
+            if (socialMedia.includes(selected)) {
+                sourceEnum = LeadSource.SOCIAL_MEDIA;
+            } else if (selected === 'Google/Website') {
+                sourceEnum = LeadSource.GOOGLE;
+            } else if (selected === 'Property portal') {
+                sourceEnum = LeadSource.PROPERTY_PORTAL;
+            } else if (ads.includes(selected)) {
+                sourceEnum = LeadSource.ADVERTISEMENT;
+            } else if (selected === 'Reference') {
+                sourceEnum = LeadSource.REFERRAL;
+            } else {
+                sourceEnum = LeadSource.OTHER;
+            }
         }
 
         return await prisma.lead.create({
@@ -94,7 +113,8 @@ export class LeadService {
                 cpFirm: data.cpFirm,
                 cpExec: data.cpExec,
                 cpPhone: data.cpPhone,
-                signature: data.signature
+                signature: data.signature,
+                consent: data.consent ?? true
             }
         });
     }
@@ -137,6 +157,7 @@ export class LeadService {
                 customerName: true,
                 phone: true,
                 source: true,
+                sourcesList: true,
                 purpose: true,
                 createdAt: true,
                 status: true

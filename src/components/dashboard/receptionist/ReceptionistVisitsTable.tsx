@@ -19,6 +19,7 @@ interface Lead {
     customerName: string;
     phone: string;
     source: string;
+    sourcesList?: string;
     purpose: string;
     createdAt: string;
     status: string;
@@ -57,11 +58,22 @@ export const ReceptionistVisitsTable: React.FC = () => {
         }
     };
 
+    const formatSource = (source: string, sourcesList?: string) => {
+        const raw = sourcesList || source || '';
+        if (raw.toUpperCase().includes('CHANNEL')) return 'CP';
+        return raw.replace('_', ' ');
+    };
+
     const getSourceColor = (source: string) => {
         switch (source?.toUpperCase()) {
             case 'REFERRAL': return 'bg-blue-100 text-blue-700 hover:bg-blue-100';
             case 'WALK_IN': return 'bg-purple-100 text-purple-700 hover:bg-purple-100';
-            case 'PHONE': return 'bg-pink-100 text-pink-700 hover:bg-pink-100';
+            case 'SOCIAL_MEDIA': return 'bg-sky-100 text-sky-700 hover:bg-sky-100';
+            case 'GOOGLE': return 'bg-teal-100 text-teal-700 hover:bg-teal-100';
+            case 'WEBSITE': return 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100';
+            case 'ADVERTISEMENT': return 'bg-orange-100 text-orange-700 hover:bg-orange-100';
+            case 'CHANNEL_PARTNER': return 'bg-indigo-100 text-indigo-700 hover:bg-indigo-100';
+            case 'PROPERTY_PORTAL': return 'bg-amber-100 text-amber-700 hover:bg-amber-100';
             default: return 'bg-gray-100 text-gray-700';
         }
     };
@@ -92,7 +104,7 @@ export const ReceptionistVisitsTable: React.FC = () => {
             'Unique ID': lead.friendlyId,
             'Customer Name': lead.customerName,
             'Contact': lead.phone,
-            'Source': lead.source,
+            'Source': formatSource(lead.source, lead.sourcesList),
             'Purpose': lead.status,
             'Scheduled Date': format(new Date(lead.createdAt), 'dd MMM yyyy')
         }));
@@ -298,7 +310,9 @@ export const ReceptionistVisitsTable: React.FC = () => {
                                 <td className="p-3 font-medium">{lead.customerName}</td>
                                 <td className="p-3 text-gray-500">{lead.phone}</td>
                                 <td className="p-3">
-                                    <Badge variant="secondary" className={getSourceColor(lead.source)}>{lead.source}</Badge>
+                                    <Badge variant="secondary" className={getSourceColor(lead.source)}>
+                                        {formatSource(lead.source, lead.sourcesList)}
+                                    </Badge>
                                 </td>
                                 <td className="p-3">
                                     <Badge variant="secondary" className={getPurposeColor(lead.status)}>{lead.status}</Badge>
