@@ -42,6 +42,7 @@ export const ReceptionistVisitsTable: React.FC = () => {
 
     const fetchLeads = async () => {
         setIsLoading(true);
+        console.log('Fetching leads from:', import.meta.env.VITE_BACKEND_BASE_URL);
         try {
             const response = await api.get('/leads/recent');
             if (Array.isArray(response.data)) {
@@ -50,8 +51,12 @@ export const ReceptionistVisitsTable: React.FC = () => {
                 console.error('API did not return an array:', response.data);
                 setLeads([]);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to fetch leads:', error);
+            // Log more specific error info if available
+            if (error.code === 'ERR_NETWORK') {
+                console.error('Network Error: Check if VITE_BACKEND_BASE_URL is correct and accessible.');
+            }
             setLeads([]);
         } finally {
             setIsLoading(false);
