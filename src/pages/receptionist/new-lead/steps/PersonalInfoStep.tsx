@@ -147,7 +147,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
 
     const isStepValid = () => {
         const requiredFields = [
-            photo,
             formData.firstName,
             formData.lastName,
             formData.gender,
@@ -186,7 +185,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">{t.photo}<span className="text-red-500">*</span></label>
+                    <label className="text-sm font-medium text-[#4A1D59]">{t.photo}</label>
 
                     {!photo ? (
                         <div
