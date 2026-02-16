@@ -26,6 +26,7 @@ const IpadView: React.FC = () => {
     const [isAddCPModalOpen, setIsAddCPModalOpen] = useState(false);
     const [isAddRevisitModalOpen, setIsAddRevisitModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const [selectedLead, setSelectedLead] = useState<{ friendlyId: string, customerName: string } | null>(null);
 
     // Shared styling for the large icons on action cards
     const iconStyle = {
@@ -33,6 +34,11 @@ const IpadView: React.FC = () => {
         height: '98.46px',
         top: '23.17px',
         left: '11.58px'
+    };
+
+    const handleGiveFeedback = (lead: { friendlyId: string, customerName: string }) => {
+        setSelectedLead(lead);
+        setIsFeedbackModalOpen(true);
     };
 
     return (
@@ -46,7 +52,7 @@ const IpadView: React.FC = () => {
 
             <main className="flex-1 w-full px-6 py-6 mx-auto xl:container">
                 {/* Search Bar Component */}
-                <IpadSearch onGiveFeedback={() => setIsFeedbackModalOpen(true)} />
+                <IpadSearch onGiveFeedback={handleGiveFeedback} />
 
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
@@ -123,7 +129,12 @@ const IpadView: React.FC = () => {
             <PreTagCustomerModal open={isPreTagModalOpen} onOpenChange={setIsPreTagModalOpen} />
             <AddChannelPartnerModal open={isAddCPModalOpen} onOpenChange={setIsAddCPModalOpen} />
             <AddRevisitModal open={isAddRevisitModalOpen} onOpenChange={setIsAddRevisitModalOpen} />
-            <FeedbackFormModal open={isFeedbackModalOpen} onOpenChange={setIsFeedbackModalOpen} />
+            <FeedbackFormModal
+                open={isFeedbackModalOpen}
+                onOpenChange={setIsFeedbackModalOpen}
+                customerName={selectedLead?.customerName}
+                friendlyId={selectedLead?.friendlyId}
+            />
         </div>
     );
 };

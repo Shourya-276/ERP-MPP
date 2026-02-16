@@ -58,3 +58,29 @@ export const getReceptionistStats = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch statistics' });
     }
 };
+
+export const searchLeads = async (req: Request, res: Response) => {
+    const { query } = req.params;
+    try {
+        const leads = await LeadService.searchLeads(query as string);
+        res.json(leads);
+    } catch (error: any) {
+        console.error('Search leads error:', error);
+        res.status(500).json({ error: 'Failed to search leads' });
+    }
+};
+
+export const saveFeedback = async (req: Request, res: Response) => {
+    const { friendlyId } = req.params;
+    try {
+        const feedback = await LeadService.saveFeedback(friendlyId as string, req.body);
+        res.status(201).json({
+            message: 'Feedback saved successfully',
+            feedback
+        });
+    } catch (error: any) {
+        console.error('Save feedback error:', error);
+        const status = error.message === 'Lead ID not found' ? 404 : 400;
+        res.status(status).json({ error: error.message || 'Failed to save feedback' });
+    }
+};

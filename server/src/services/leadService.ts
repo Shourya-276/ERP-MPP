@@ -1,12 +1,13 @@
 import prisma from '../config/prisma';
 import { LeadStatus, LeadSource } from '@prisma/client';
+// Service for managing lead-related operations and feedback.
 
 export class LeadService {
     /**
      * Generates a unique friendly ID like LEAD-0001
      */
     private static async generateFriendlyId(): Promise<string> {
-        const lastLead = await prisma.lead.findFirst({
+        const lastLead = await (prisma.lead as any).findFirst({
             orderBy: { id: 'desc' },
             select: { id: true }
         });
@@ -17,7 +18,7 @@ export class LeadService {
 
     static async createLead(data: any) {
         // Check if phone already exists
-        const existingLead = await prisma.lead.findUnique({
+        const existingLead = await (prisma.lead as any).findUnique({
             where: { phone: data.phone }
         });
 
@@ -55,7 +56,7 @@ export class LeadService {
             }
         }
 
-        return await prisma.lead.create({
+        return await (prisma.lead as any).create({
             data: {
                 friendlyId: friendlyId,
                 status: LeadStatus.VISIT,
@@ -120,7 +121,7 @@ export class LeadService {
     }
 
     static async getLeadByFriendlyId(friendlyId: string) {
-        const lead = await prisma.lead.findUnique({
+        const lead = await (prisma.lead as any).findUnique({
             where: { friendlyId: friendlyId }
         });
 
@@ -134,7 +135,7 @@ export class LeadService {
     static async updateToRevisit(friendlyId: string) {
         await this.getLeadByFriendlyId(friendlyId);
 
-        return await prisma.lead.update({
+        return await (prisma.lead as any).update({
             where: { friendlyId: friendlyId },
             data: {
                 status: LeadStatus.REVISIT,
@@ -149,7 +150,7 @@ export class LeadService {
     }
 
     static async getRecentLeads(limit: number = 20) {
-        return await prisma.lead.findMany({
+        return await (prisma.lead as any).findMany({
             orderBy: { createdAt: 'desc' },
             take: limit,
             select: {
@@ -166,21 +167,21 @@ export class LeadService {
     }
 
     static async getReceptionistStats() {
-        const counts = await prisma.lead.groupBy({
+        const counts = await (prisma.lead as any).groupBy({
             by: ['status'],
             _count: {
                 _all: true
             }
         });
 
-        const visitCount = counts.find(c => c.status === LeadStatus.VISIT)?._count._all || 0;
-        const revisitCount = counts.find(c => c.status === LeadStatus.REVISIT)?._count._all || 0;
+        const visitCount = (counts as any[]).find(c => c.status === LeadStatus.VISIT)?._count._all || 0;
+        const revisitCount = (counts as any[]).find(c => c.status === LeadStatus.REVISIT)?._count._all || 0;
 
-        const assignedCount = await prisma.lead.count({
+        const assignedCount = await (prisma.lead as any).count({
             where: { assignedToId: { not: null } }
         });
 
-        const totalCount = await prisma.lead.count();
+        const totalCount = await (prisma.lead as any).count();
         const pendingCount = totalCount - assignedCount;
 
         return {
@@ -190,5 +191,65 @@ export class LeadService {
             assignedCount,
             pendingCount
         };
+    }
+
+    static async searchLeads(query: string) {
+        let searchQuery = query.trim();
+
+        // If it's just numbers, try to match it as the numeric part of LEAD-XXXX
+        // or just see if the friendlyId contains it.
+        // If the user types '0001', we want it to match 'LEAD-0001'
+        const isNumeric = /^\d+$/.test(searchQuery);
+
+        const leads = await (prisma.lead as any).findMany({
+            where: {
+                OR: [
+                    { friendlyId: { contains: searchQuery } },
+                    ...(isNumeric ? [{ friendlyId: { contains: searchQuery.padStart(4, '0') } }] : []),
+                    { customerName: { contains: searchQuery } },
+                    { phone: { contains: searchQuery } }
+                ]
+            },
+            take: 10,
+            select: {
+                friendlyId: true,
+                customerName: true,
+                phone: true,
+                feedbacks: {
+                    select: { id: true },
+                    take: 1
+                }
+            }
+        });
+
+        return (leads as any[]).map(lead => ({
+            friendlyId: lead.friendlyId,
+            customerName: lead.customerName,
+            phone: lead.phone,
+            hasFeedback: lead.feedbacks && lead.feedbacks.length > 0
+        }));
+    }
+
+    static async saveFeedback(friendlyId: string, feedbackData: any) {
+        const lead = await (prisma.lead as any).findUnique({
+            where: { friendlyId: friendlyId },
+            select: { id: true }
+        });
+
+        if (!lead) {
+            throw new Error('Lead ID not found');
+        }
+
+        return await (prisma as any).feedback.create({
+            data: {
+                leadId: lead.id,
+                onboarding: feedbackData.onboarding,
+                staff: feedbackData.staff,
+                projectShared: feedbackData.projectShared,
+                explanation: feedbackData.explanation,
+                overall: feedbackData.overall,
+                comment: feedbackData.comment
+            }
+        });
     }
 }

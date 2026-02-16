@@ -1,4 +1,4 @@
-// This is your Prisma schema file managed by Antigravity
+// This is the Prisma schema file
 
 generator client {
   provider = "prisma-client-js"
@@ -119,10 +119,24 @@ model Lead {
   
   // Logs for interactions
   interactions    Interaction[]
+  feedbacks       Feedback[]
 
   @@index([friendlyId])
   @@index([phone])
   @@index([createdAt])
+}
+
+model Feedback {
+  id              Int      @id @default(autoincrement())
+  leadId          Int
+  lead            Lead     @relation(fields: [leadId], references: [id])
+  onboarding      Int      // 1-5
+  staff           Int      // 1-5
+  projectShared   Int      // 1-5
+  explanation     Int      // 1-5
+  overall         Int      // 1-5
+  comment         String?  @db.Text
+  createdAt       DateTime @default(now())
 }
 
 model Interaction {

@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { X } from 'lucide-react';
-import megaplexLogo from '@/assets/megaplex-logo.png';
+import { X, Loader2 } from 'lucide-react';
+import api from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 
 interface FeedbackFormModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     customerName?: string;
+    friendlyId?: string;
 }
 
 const FeedbackRating = ({
@@ -73,7 +75,14 @@ const FeedbackRating = ({
     );
 };
 
-export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({ open, onOpenChange, customerName = "Rajesh Kumar" }) => {
+export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({
+    open,
+    onOpenChange,
+    customerName = "Valued Customer",
+    friendlyId
+}) => {
+    const { toast } = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [ratings, setRatings] = useState({
         onboarding: 3,
         staff: 3,
@@ -87,30 +96,70 @@ export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({ open, onOp
         setRatings(prev => ({ ...prev, [key]: val }));
     };
 
-    const handleSubmit = () => {
-        console.log({ ratings, comment });
-        onOpenChange(false);
+    const handleSubmit = async () => {
+        if (!friendlyId) return;
+
+        setIsSubmitting(true);
+        try {
+            await api.post(`/leads/${friendlyId}/feedback`, {
+                ...ratings,
+                comment
+            });
+
+            toast({
+                title: "Success",
+                description: "Feedback saved successfully",
+            });
+
+            // Success! Reset and close
+            setRatings({
+                onboarding: 3,
+                staff: 3,
+                projectShared: 3,
+                explanation: 5,
+                overall: 5
+            });
+            setComment("");
+            onOpenChange(false);
+        } catch (error) {
+            console.error('Submit feedback error:', error);
+            toast({
+                title: "Error",
+                description: "Failed to save feedback. Please try again.",
+                variant: "destructive"
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
+    const currentDate = new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    const currentTime = new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl p-0 gap-0 bg-[#F5F5F7] overflow-hidden max-h-[90vh] flex flex-col">
                 {/* Header */}
                 <div className="bg-[#4A1D59] p-4 flex justify-between items-center shrink-0">
-                    <div className="flex items-center gap-2">
-                        {/* <img src={megaplexLogo} alt="Megaplex" className="h-8 object-contain" /> */}
-                    </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-white font-medium">Feedback Form</span>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-white hover:bg-white/10 rounded-full h-8 w-8"
-                            onClick={() => onOpenChange(false)}
-                        >
-                            <X className="w-5 h-5" />
-                        </Button>
+                        <span className="text-white font-medium text-lg ml-2">Feedback Form</span>
                     </div>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-white/10 rounded-full h-8 w-8"
+                        onClick={() => onOpenChange(false)}
+                    >
+                        <X className="w-5 h-5" />
+                    </Button>
                 </div>
 
                 <div className="overflow-y-auto flex-1 p-6 space-y-4">
@@ -121,12 +170,12 @@ export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({ open, onOp
                             <div className="font-bold text-base">{customerName}</div>
                         </div>
                         <div>
-                            <div className="font-semibold opacity-70 mb-1">Sales Executive</div>
-                            <div className="font-bold text-base">Priya Sharma</div>
+                            <div className="font-semibold opacity-70 mb-1">Lead ID</div>
+                            <div className="font-bold text-base">{friendlyId || '---'}</div>
                         </div>
                         <div>
                             <div className="font-semibold opacity-70 mb-1">Date & Time</div>
-                            <div className="font-bold text-base">Dec 19, 2025 • 3:45 PM</div>
+                            <div className="font-bold text-base">{currentDate} • {currentTime}</div>
                         </div>
                     </div>
 
@@ -176,8 +225,13 @@ export const FeedbackFormModal: React.FC<FeedbackFormModalProps> = ({ open, onOp
                     <Button
                         className="w-full bg-[#4A1D59] hover:bg-[#32103E] text-white h-12 rounded-xl text-base font-semibold"
                         onClick={handleSubmit}
+                        disabled={isSubmitting || !friendlyId}
                     >
-                        Submit Feedback
+                        {isSubmitting ? (
+                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
+                        ) : (
+                            "Submit Feedback"
+                        )}
                     </Button>
                 </div>
 
