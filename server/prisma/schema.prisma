@@ -73,6 +73,7 @@ model Lead {
   residenceType   String?    // Owned, Rented
   address         String?    @db.Text
   location        String?
+  city            String?
   subLocation     String?
   pinCode         String?
   workType        String?    // Salaried, Self-employed, etc

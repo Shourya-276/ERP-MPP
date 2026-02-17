@@ -17,8 +17,8 @@ const DashboardSidebar: React.FC = () => {
   const location = useLocation();
   const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 

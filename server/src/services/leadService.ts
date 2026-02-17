@@ -82,6 +82,7 @@ export class LeadService {
                 residenceType: data.residenceType,
                 address: data.address,
                 location: data.location,
+                city: data.city,
                 subLocation: data.subLocation,
                 pinCode: data.pinCode,
                 workType: data.workType,

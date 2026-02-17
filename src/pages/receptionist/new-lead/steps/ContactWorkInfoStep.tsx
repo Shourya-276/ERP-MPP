@@ -19,6 +19,7 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
     const [formData, setFormData] = useState({
         address: initialData.address || '',
         location: initialData.location || '',
+        city: initialData.city || '',
         subLocation: initialData.subLocation || '',
         pinCode: initialData.pinCode || '',
         jobTitle: initialData.jobTitle || '',
@@ -156,7 +157,7 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
             </div>
 
             {/* Location Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-[#4A1D59]">{t.location}<span className="text-red-500">*</span></label>
                     <Input
@@ -164,6 +165,15 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                         className="bg-[#FAFAFA] border-gray-100 h-12"
                         value={formData.location}
                         onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-[#4A1D59]">{t.city}</label>
+                    <Input
+                        placeholder="e.g. Mumbai"
+                        className="bg-[#FAFAFA] border-gray-100 h-12"
+                        value={formData.city}
+                        onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
                     />
                 </div>
                 <div className="space-y-2">

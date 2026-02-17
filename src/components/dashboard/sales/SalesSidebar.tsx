@@ -30,8 +30,8 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, hasSubmenu, on
   <button
     onClick={onClick}
     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive
-        ? 'bg-[#4A1D59] text-white'
-        : 'text-muted-foreground hover:bg-muted/50'
+      ? 'bg-[#4A1D59] text-white'
+      : 'text-muted-foreground hover:bg-muted/50'
       }`}
   >
     {icon}
@@ -44,8 +44,8 @@ const SalesSidebar: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 

@@ -10,7 +10,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -33,12 +33,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { user, token } = response.data;
+      const { user } = response.data;
 
-      // Store user and token
+      // Store user info for UI persistence (Token is handled by HttpOnly cookie)
       setUser(user);
       localStorage.setItem('erp_user', JSON.stringify(user));
-      localStorage.setItem('erp_token', token);
 
       return true;
     } catch (error) {
@@ -47,12 +46,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('erp_user');
-    localStorage.removeItem('erp_token');
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('erp_user');
+    }
   };
-
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, isLoading }}>
       {children}

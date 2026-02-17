@@ -30,8 +30,15 @@ export const login = async (req: Request, res: Response) => {
             { expiresIn: '1d' }
         );
 
+        // Set HttpOnly Cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // Set to false for HTTP deployment; change to true for HTTPS
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
+        });
+
         res.json({
-            token,
             user: {
                 email: user.email,
                 name: user.name,
@@ -78,4 +85,9 @@ export const signup = async (req: Request, res: Response) => {
         console.error('Signup error:', error);
         res.status(500).json({ error: 'Internal server error during signup' });
     }
+};
+
+export const logout = (req: Request, res: Response) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out successfully' });
 };

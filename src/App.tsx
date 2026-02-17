@@ -13,6 +13,8 @@ import IpadView from "./pages/receptionist/IpadView";
 import NewLeadForm from "./pages/receptionist/new-lead/NewLeadForm";
 
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/receptionist" element={<ReceptionistDashboard />} />
             <Route path="/receptionist/ipad-view" element={<IpadView />} />
             <Route path="/receptionist/new-lead" element={<NewLeadForm />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
