@@ -44,7 +44,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, to, onClick }) =
     );
 };
 
-export const ReceptionistSidebar: React.FC = () => {
+export const ReceptionistSidebarContent: React.FC = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -54,7 +54,7 @@ export const ReceptionistSidebar: React.FC = () => {
     };
 
     return (
-        <div className="w-64 bg-white border-r flex flex-col p-4 shrink-0">
+        <div className="flex flex-col h-full">
             <div className="space-y-1">
                 <p className="text-xs font-semibold text-gray-400 px-4 mb-2 uppercase">Main Menu</p>
                 <SidebarItem
@@ -84,6 +84,14 @@ export const ReceptionistSidebar: React.FC = () => {
                     <span className="font-medium text-sm">Logout</span>
                 </button>
             </div>
+        </div>
+    );
+};
+
+export const ReceptionistSidebar: React.FC = () => {
+    return (
+        <div className="hidden min-[481px]:flex w-64 bg-white border-r flex-col p-4 shrink-0 transition-all h-full">
+            <ReceptionistSidebarContent />
         </div>
     );
 };

@@ -1,10 +1,5 @@
 import React, { useState, useRef } from 'react';
-import SignatureCanvas from 'react-signature-canvas';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Trash2, X } from 'lucide-react';
+import { Trash2, X, Check } from 'lucide-react';
 import { translations, Language } from '../translations';
 
 interface FeedbackStepProps {
@@ -97,15 +92,17 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, i
             <button
                 type="button"
                 onClick={() => toggleSource(label)}
-                className="flex items-center gap-3 text-sm text-foreground/80 hover:text-foreground group transition-all"
+                className="flex items-center gap-3 text-sm text-gray-500 hover:text-[#4A1D59] group transition-all"
             >
                 <div className={cn(
-                    "w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-200",
-                    isSelected ? "bg-[#4A1D59] border-[#4A1D59] scale-105 shadow-sm" : "bg-white border-gray-400 group-hover:border-[#4A1D59]"
+                    "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300",
+                    isSelected 
+                        ? "bg-[#4A1D59] border-[#4A1D59] scale-110 shadow-md shadow-purple-200" 
+                        : "bg-white border-gray-200 group-hover:border-[#4A1D59]"
                 )}>
-                    {isSelected && <div className="w-2 h-2 rounded-full bg-white animate-in zoom-in-50 duration-200" />}
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-white animate-in zoom-in-50 duration-300" />}
                 </div>
-                <span className={cn(isSelected && "text-[#4A1D59] font-medium")}>{label}</span>
+                <span className={cn("font-medium transition-colors", isSelected ? "text-[#4A1D59]" : "text-gray-500")}>{label}</span>
             </button>
         );
     };
@@ -117,12 +114,12 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, i
                 <p className="text-muted-foreground text-sm">{tc.followSteps}</p>
             </div>
 
-            <div className="space-y-6">
-                <h3 className="text-[#4A1D59] font-semibold text-sm">{t.whereDidYouFind}<span className="text-red-500">*</span></h3>
+            <div className="space-y-8">
+                <h3 className="text-[#4A1D59] font-bold text-xs uppercase tracking-wider">{t.whereDidYouFind}<span className="text-red-500">*</span></h3>
 
-                <div className="space-y-4 ml-2">
-                    <div className="text-sm font-medium text-gray-600 font-inter">{t.online}:</div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-4 ml-1">
+                    <div className="text-xs font-bold text-gray-400 uppercase tracking-tight">{t.online}:</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <CheckboxOption label="Facebook" />
                         <CheckboxOption label="Instagram" />
                         <CheckboxOption label="Youtube" />
@@ -132,9 +129,9 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, i
                     </div>
                 </div>
 
-                <div className="space-y-4 ml-2">
-                    <div className="text-sm font-medium text-gray-600 font-inter">{t.offline}:</div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="space-y-4 ml-1">
+                    <div className="text-xs font-bold text-gray-400 uppercase tracking-tight">{t.offline}:</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <CheckboxOption label="Newspaper Ads" />
                         <CheckboxOption label="Billboards" />
                         <CheckboxOption label="Station Hoarding" />
@@ -143,32 +140,36 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, i
                         <button
                             type="button"
                             onClick={() => toggleSource('Reference')}
-                            className="flex items-center gap-3 text-sm text-foreground/80 hover:text-foreground group"
+                            className="flex items-center gap-3 text-sm text-gray-500 hover:text-[#4A1D59] group"
                         >
                             <div className={cn(
-                                "w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-200",
-                                selectedSources.includes('Reference') ? "bg-[#4A1D59] border-[#4A1D59] scale-105" : "bg-white border-gray-400 group-hover:border-[#4A1D59]"
+                                "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300",
+                                selectedSources.includes('Reference') 
+                                    ? "bg-[#4A1D59] border-[#4A1D59] scale-110 shadow-md shadow-purple-200" 
+                                    : "bg-white border-gray-200 group-hover:border-[#4A1D59]"
                             )}>
                                 {selectedSources.includes('Reference') && <div className="w-2 h-2 rounded-full bg-white animate-in zoom-in-50" />}
                             </div>
-                            <span className={cn(selectedSources.includes('Reference') && "text-[#4A1D59] font-medium")}>{t.reference}</span>
+                            <span className={cn("font-medium transition-colors", selectedSources.includes('Reference') ? "text-[#4A1D59]" : "text-gray-500")}>{t.reference}</span>
                         </button>
                     </div>
                 </div>
 
                 {selectedSources.includes('Reference') && (
-                    <div className="grid grid-cols-2 gap-8 pt-2">
-                        <div className="relative border-b border-[#4A1D59]">
-                            <input
-                                className="w-full py-2 outline-none text-sm placeholder:text-gray-400"
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 animate-in slide-in-from-top-2 duration-300">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.nameOfReference}</label>
+                            <Input
+                                className="bg-[#FDFCFD] border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 placeholder={t.nameOfReference}
                                 value={formData.refName}
                                 onChange={(e) => setFormData(prev => ({ ...prev, refName: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
                             />
                         </div>
-                        <div className="relative border-b border-[#4A1D59]">
-                            <input
-                                className="w-full py-2 outline-none text-sm placeholder:text-gray-400"
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.contact}</label>
+                            <Input
+                                className="bg-[#FDFCFD] border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 placeholder={t.contact}
                                 value={formData.refContact}
                                 onChange={(e) => handleNumericChange('refContact', e.target.value)}
@@ -187,65 +188,73 @@ const FeedbackStep: React.FC<FeedbackStepProps> = ({ onNext, onBack, language, i
                         // If CP is selected, clear other sources to maintain "mostly single source" logic
                         if (!showChannelPartner) setSelectedSources([]);
                     }}
-                    className="flex items-center gap-3 text-sm font-bold text-[#4A1D59]"
+                    className="flex items-center gap-3 text-sm font-bold text-[#4A1D59] uppercase tracking-wider"
                 >
                     <div className={cn(
-                        "w-5 h-5 rounded border flex items-center justify-center transition-all duration-200",
-                        showChannelPartner ? "bg-[#4A1D59] border-[#4A1D59]" : "bg-white border-[#4A1D59]"
+                        "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-300",
+                        showChannelPartner ? "bg-[#4A1D59] border-[#4A1D59] scale-105 shadow-md shadow-purple-200" : "bg-white border-gray-200 hover:border-[#4A1D59]"
                     )}>
-                        {showChannelPartner && <span className="text-white text-xs animate-in fade-in">✓</span>}
+                        {showChannelPartner && <Check className="text-white w-3 h-3 animate-in fade-in" />}
                     </div>
                     {t.broker}
                 </button>
 
                 {showChannelPartner && (
-                    <div className="mt-4 grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
-                        <Input
-                            placeholder={t.cpFirm}
-                            className="bg-white border-gray-200 focus:ring-[#4A1D59] focus:border-[#4A1D59]"
-                            value={formData.cpFirm}
-                            onChange={(e) => setFormData(prev => ({ ...prev, cpFirm: e.target.value }))}
-                        />
-                        <Input
-                            placeholder={t.execName}
-                            className="bg-white border-gray-200 focus:ring-[#4A1D59] focus:border-[#4A1D59]"
-                            value={formData.cpExec}
-                            onChange={(e) => setFormData(prev => ({ ...prev, cpExec: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
-                        />
-                        <div className="col-span-2 text-xs text-[#4A1D59] font-medium">{t.addFirm}</div>
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#FAF8FD] p-6 rounded-2xl border border-purple-100/50 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="space-y-2">
+                             <label className="text-[10px] font-bold text-[#4A1D59] uppercase racking-tight">CP Firm Name</label>
+                             <Input
+                                placeholder={t.cpFirm}
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
+                                value={formData.cpFirm}
+                                onChange={(e) => setFormData(prev => ({ ...prev, cpFirm: e.target.value }))}
+                             />
+                        </div>
+                        <div className="space-y-2">
+                             <label className="text-[10px] font-bold text-[#4A1D59] uppercase racking-tight">Executive Name</label>
+                             <Input
+                                placeholder={t.execName}
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
+                                value={formData.cpExec}
+                                onChange={(e) => setFormData(prev => ({ ...prev, cpExec: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
+                             />
+                        </div>
 
-                        <div className="col-span-2 flex gap-4">
-                            <div className="w-20 bg-white border border-gray-200 rounded-md flex items-center justify-center gap-1 text-xs">
-                                <span>🇮🇳</span> +91
+                        <div className="md:col-span-2 space-y-2">
+                            <label className="text-[10px] font-bold text-[#4A1D59] uppercase racking-tight">CP Phone Number</label>
+                            <div className="flex gap-4">
+                                <div className="w-24 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-xs font-bold">
+                                    <span>🇮🇳</span> +91
+                                </div>
+                                <Input
+                                    placeholder={translations[language].personalInfo.phone}
+                                    className="flex-1 bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
+                                    value={formData.cpPhone}
+                                    onChange={(e) => handleNumericChange('cpPhone', e.target.value)}
+                                />
                             </div>
-                            <Input
-                                placeholder={translations[language].personalInfo.phone}
-                                className="flex-1 bg-white border-gray-200 focus:ring-[#4A1D59] focus:border-[#4A1D59]"
-                                value={formData.cpPhone}
-                                onChange={(e) => handleNumericChange('cpPhone', e.target.value)}
-                            />
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Consent Checkbox - FIXED */}
-            <div className="flex items-start gap-3 select-none">
+            {/* Consent Checkbox */}
+            <div className="flex items-start gap-4 select-none bg-purple-50/20 p-4 rounded-2xl border border-purple-100/30">
                 <button
                     type="button"
                     onClick={() => setConsent(!consent)}
                     className={cn(
-                        "w-5 h-5 mt-0.5 rounded border flex items-center justify-center flex-shrink-0 transition-all duration-200",
-                        consent ? "bg-[#4A1D59] border-[#4A1D59]" : "bg-white border-gray-400 hover:border-[#4A1D59]"
+                        "w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                        consent ? "bg-[#4A1D59] border-[#4A1D59] scale-110 shadow-sm" : "bg-white border-gray-300 hover:border-[#4A1D59]"
                     )}
                 >
-                    {consent && <span className="text-white text-xs animate-in zoom-in-50">✓</span>}
+                    {consent && <Check className="text-white w-3 h-3 animate-in zoom-in-50" />}
                 </button>
                 <p
-                    className="text-xs text-gray-600 leading-tight cursor-pointer"
+                    className="text-xs text-gray-500 font-medium leading-relaxed cursor-pointer"
                     onClick={() => setConsent(!consent)}
                 >
-                    {t.consent}<span className="text-red-500">*</span>
+                    {t.consent}<span className="text-red-500 ml-1">*</span>
                 </p>
             </div>
 

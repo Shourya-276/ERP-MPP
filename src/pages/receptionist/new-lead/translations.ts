@@ -31,7 +31,7 @@ export const translations = {
             dob: "Date of Birth",
             photo: "Photo",
             takePhoto: "Take a photo",
-            title: "Preffix",
+            title: "Prefix",
             firstName: "First Name",
             middle: "Middle",
             lastName: "Last Name",

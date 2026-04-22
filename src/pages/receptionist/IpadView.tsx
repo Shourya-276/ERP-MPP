@@ -28,12 +28,14 @@ const IpadView: React.FC = () => {
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
     const [selectedLead, setSelectedLead] = useState<{ friendlyId: string, customerName: string } | null>(null);
 
-    // Shared styling for the large icons on action cards
+    // Shared styling for the large icons on action cards - Made responsive
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 480;
+    
     const iconStyle = {
-        width: '115.54px',
-        height: '98.46px',
-        top: '23.17px',
-        left: '11.58px'
+        width: isMobile ? '80px' : '115.54px',
+        height: isMobile ? '70px' : '98.46px',
+        top: isMobile ? '15px' : '23.17px',
+        left: isMobile ? '8px' : '11.58px'
     };
 
     const handleGiveFeedback = (lead: { friendlyId: string, customerName: string }) => {
@@ -44,18 +46,18 @@ const IpadView: React.FC = () => {
     return (
         <div className="min-h-screen bg-white flex flex-col">
             {/* Header */}
-            <header className="bg-[#4A1D59] p-4 shadow-md">
-                <div className="w-full px-6">
-                    {/* <img src={megaplexLogo} alt="Megaplex Prime" className="h-10 object-contain" /> */}
+            <header className="bg-[#4A1D59] p-4 shadow-md shrink-0">
+                <div className="w-full px-2 md:px-6">
+                    {/* <img src={megaplexLogo} alt="Megaplex Prime" className="h-8 md:h-10 object-contain" /> */}
                 </div>
             </header>
 
-            <main className="flex-1 w-full px-6 py-6 mx-auto xl:container">
+            <main className="flex-1 w-full px-4 md:px-6 py-4 md:py-6 mx-auto xl:container">
                 {/* Search Bar Component */}
                 <IpadSearch onGiveFeedback={handleGiveFeedback} />
 
                 {/* Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-6">
                     <ReceptionistActionCard
                         title={<>Add New<br />Lead</>}
                         subtitle="Create a new customer enquiry"

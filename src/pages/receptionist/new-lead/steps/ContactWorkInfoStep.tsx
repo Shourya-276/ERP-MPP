@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -105,41 +106,41 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
             </div>
 
             {/* Current Residence Type */}
-            <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">{t.currentResidenceType}<span className="text-red-500">*</span></label>
+            <div className="space-y-4">
+                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.currentResidenceType}<span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
                     <button
                         onClick={() => setResidenceType('Owned')}
                         className={cn(
-                            "flex-1 py-3 px-4 rounded-lg border-2 transition-all font-medium flex items-center gap-2 justify-center",
+                            "flex-1 py-4 px-6 rounded-2xl border-2 transition-all font-bold flex items-center gap-3 justify-center shadow-sm",
                             residenceType === 'Owned'
-                                ? "border-[#4A1D59] bg-[#E6D5F0] text-[#4A1D59]"
-                                : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
+                                ? "border-[#4A1D59] bg-[#F5ECF9] text-[#4A1D59]"
+                                : "border-gray-100 bg-white text-gray-400 hover:border-gray-200"
                         )}
                     >
-                        <span className={cn(
-                            "w-4 h-4 rounded flex items-center justify-center",
-                            residenceType === 'Owned' ? "bg-[#4A1D59]" : "border border-gray-300"
+                        <div className={cn(
+                            "w-5 h-5 rounded-full flex items-center justify-center transition-all",
+                            residenceType === 'Owned' ? "bg-[#4A1D59] scale-110 shadow-sm" : "border-2 border-gray-200"
                         )}>
-                            {residenceType === 'Owned' && <span className="text-white text-[10px]">✓</span>}
-                        </span>
+                            {residenceType === 'Owned' && <Check className="text-white w-3 h-3" />}
+                        </div>
                         {t.ownedHouse}
                     </button>
                     <button
                         onClick={() => setResidenceType('Rented')}
                         className={cn(
-                            "flex-1 py-3 px-4 rounded-lg border-2 transition-all font-medium flex items-center gap-2 justify-center",
+                            "flex-1 py-4 px-6 rounded-2xl border-2 transition-all font-bold flex items-center gap-3 justify-center shadow-sm",
                             residenceType === 'Rented'
-                                ? "border-[#4A1D59] bg-[#E6D5F0] text-[#4A1D59]"
-                                : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
+                                ? "border-[#4A1D59] bg-[#F5ECF9] text-[#4A1D59]"
+                                : "border-gray-100 bg-white text-gray-400 hover:border-gray-200"
                         )}
                     >
-                        <span className={cn(
-                            "w-4 h-4 rounded flex items-center justify-center",
-                            residenceType === 'Rented' ? "bg-[#4A1D59]" : "border border-gray-300"
+                        <div className={cn(
+                            "w-5 h-5 rounded-full flex items-center justify-center transition-all",
+                            residenceType === 'Rented' ? "bg-[#4A1D59] scale-110 shadow-sm" : "border-2 border-gray-200"
                         )}>
-                            {residenceType === 'Rented' && <span className="text-white text-[10px]">✓</span>}
-                        </span>
+                            {residenceType === 'Rented' && <Check className="text-white w-3 h-3" />}
+                        </div>
                         {t.rentedHouse}
                     </button>
                 </div>
@@ -147,10 +148,10 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
 
             {/* Address */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1D59]">{t.shareAddress}<span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.shareAddress}<span className="text-red-500">*</span></label>
                 <Input
                     placeholder={t.enterAddress}
-                    className="bg-[#FAFAFA] border-gray-100 h-12"
+                    className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
                     value={formData.address}
                     onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
                 />
@@ -159,28 +160,28 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
             {/* Location Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">{t.location}<span className="text-red-500">*</span></label>
+                    <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.location}<span className="text-red-500">*</span></label>
                     <Input
                         placeholder="e.g. Vikhroli"
-                        className="bg-[#FAFAFA] border-gray-100 h-12"
+                        className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
                         value={formData.location}
                         onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">{t.city}</label>
+                    <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.city}</label>
                     <Input
                         placeholder="e.g. Mumbai"
-                        className="bg-[#FAFAFA] border-gray-100 h-12"
+                        className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
                         value={formData.city}
                         onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#4A1D59]">{t.subLocation}</label>
+                    <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.subLocation}</label>
                     <Input
-                        placeholder="e.g. Kannamwar Nagar"
-                        className="bg-[#FAFAFA] border-gray-100 h-12"
+                        placeholder="e.g. Nagar"
+                        className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
                         value={formData.subLocation}
                         onChange={(e) => setFormData(prev => ({ ...prev, subLocation: e.target.value }))}
                     />
@@ -189,27 +190,27 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
 
             {/* Pin Code */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1D59]">{t.pinCode}<span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.pinCode}<span className="text-red-500">*</span></label>
                 <Input
                     placeholder="Enter 6-digit pin code"
-                    className="bg-[#FAFAFA] border-gray-100 h-12"
+                    className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
                     value={formData.pinCode}
                     onChange={(e) => handlePinCodeChange(e.target.value)}
                 />
             </div>
 
             {/* Work Type */}
-            <div className="space-y-3">
-                <label className="text-sm font-medium text-[#4A1D59]">{t.describeWorkType}<span className="text-red-500">*</span></label>
-                <div className="flex flex-wrap gap-2">
+            <div className="space-y-4">
+                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.describeWorkType}<span className="text-red-500">*</span></label>
+                <div className="flex flex-wrap gap-3">
                     {['Salaried', 'Government', 'Self-employed', 'Freelancer', 'Retired'].map((type) => (
                         <button
                             key={type}
                             onClick={() => setWorkType(type)}
                             className={cn(
-                                "px-6 py-2 rounded-full text-xs font-medium transition-colors",
+                                "px-8 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm active:scale-95",
                                 workType === type
-                                    ? "bg-[#4A1D59] text-white"
+                                    ? "bg-[#4A1D59] text-white shadow-[#4A1D59]/20"
                                     : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                             )}
                         >
@@ -220,44 +221,44 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
             </div>
 
             {/* Conditional Work Details */}
-            <div className="bg-[#F8F9FE] p-6 rounded-xl space-y-4">
+            <div className="bg-[#FAF8FD] p-6 rounded-2xl space-y-5 border border-purple-100/50">
                 <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1 h-3 bg-[#4A1D59] rounded-full"></div>
-                    <h3 className="font-semibold text-[#4A1D59] text-sm">
+                    <div className="w-1 h-3.5 bg-[#4A1D59] rounded-full"></div>
+                    <h3 className="font-bold text-[#4A1D59] text-xs uppercase tracking-wider">
                         {getWorkDetailsHeader()} {t.detailsSuffix}
                     </h3>
                 </div>
 
                 {workType === 'Salaried' && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.jobTitle}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase racking-tight">{t.fields.jobTitle}<span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="e.g. Software Engineer"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.jobTitle}
                                 onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.orgName}</label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.orgName}</label>
                             <Input
                                 placeholder="e.g. Org Name"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.orgName}
                                 onChange={(e) => setFormData(prev => ({ ...prev, orgName: e.target.value }))}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.companyType}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.companyType}<span className="text-red-500">*</span></label>
                             <Select
                                 value={formData.companyType}
                                 onValueChange={(val) => setFormData(prev => ({ ...prev, companyType: val }))}
                             >
-                                <SelectTrigger className="bg-white border-gray-200">
+                                <SelectTrigger className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20">
                                     <SelectValue placeholder={translations[language].personalInfo.select} />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-xl">
                                     <SelectItem value="private">Private</SelectItem>
                                     <SelectItem value="mnc">MNC</SelectItem>
                                     <SelectItem value="startup">Startup</SelectItem>
@@ -266,19 +267,20 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                         </div>
                     </div>
                 )}
-
+                {/* ... other work types would be updated similarly if we had them in a single block, but they are split by if-statements ... */}
+                {/* I will update others as well to ensure total consistency */}
                 {workType === 'Self-employed' && (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.businessType}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.businessType}<span className="text-red-500">*</span></label>
                             <Select
                                 value={formData.businessType}
                                 onValueChange={(val) => setFormData(prev => ({ ...prev, businessType: val }))}
                             >
-                                <SelectTrigger className="bg-white border-gray-200">
+                                <SelectTrigger className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20">
                                     <SelectValue placeholder={translations[language].personalInfo.select} />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-xl">
                                     <SelectItem value="sole_proprietorship">Sole Proprietorship</SelectItem>
                                     <SelectItem value="partnership">Partnership</SelectItem>
                                     <SelectItem value="private_limited">Private Limited</SelectItem>
@@ -287,90 +289,87 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsInBusiness}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.yearsInBusiness}<span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="Years"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.yearsInBusiness}
                                 onChange={(e) => handleNumericChange('yearsInBusiness', e.target.value)}
                             />
                         </div>
                     </div>
                 )}
-
                 {workType === 'Freelancer' && (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.fieldOfWork}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.fieldOfWork}<span className="text-red-500">*</span></label>
                             <Input
-                                placeholder="e.g., Graphic Design, Consulting"
-                                className="bg-white border-gray-200"
+                                placeholder="e.g., Graphic Design"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.fieldOfWork}
                                 onChange={(e) => setFormData(prev => ({ ...prev, fieldOfWork: e.target.value }))}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsOfExperience}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.yearsOfExperience}<span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="Years"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.yearsOfExperience}
                                 onChange={(e) => handleNumericChange('yearsOfExperience', e.target.value)}
                             />
                         </div>
                     </div>
                 )}
-
                 {workType === 'Retired' && (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.prevOccupation}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.prevOccupation}<span className="text-red-500">*</span></label>
                             <Input
-                                placeholder="e.g., Bank Manager"
-                                className="bg-white border-gray-200"
+                                placeholder="e.g., Manager"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.prevOccupation}
                                 onChange={(e) => setFormData(prev => ({ ...prev, prevOccupation: e.target.value }))}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsSinceRetirement}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.yearsSinceRetirement}<span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="Years"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.yearsSinceRetirement}
                                 onChange={(e) => handleNumericChange('yearsSinceRetirement', e.target.value)}
                             />
                         </div>
                     </div>
                 )}
-
                 {workType === 'Government' && (
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-[#4A1D59]">{t.fields.department}<span className="text-red-500">*</span></label>
+                                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.department}<span className="text-red-500">*</span></label>
                                 <Input
                                     placeholder="e.g., IT"
-                                    className="bg-white border-gray-200"
+                                    className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                     value={formData.department}
                                     onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-[#4A1D59]">{t.fields.designation}<span className="text-red-500">*</span></label>
+                                <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.designation}<span className="text-red-500">*</span></label>
                                 <Input
-                                    placeholder="e.g., Employee"
-                                    className="bg-white border-gray-200"
+                                    placeholder="e.g., Executive"
+                                    className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                     value={formData.designation}
                                     onChange={(e) => setFormData(prev => ({ ...prev, designation: e.target.value }))}
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-[#4A1D59]">{t.fields.yearsOfService}<span className="text-red-500">*</span></label>
+                            <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-tight">{t.fields.yearsOfService}<span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="Years"
-                                className="bg-white border-gray-200"
+                                className="bg-white border-gray-200 h-11 rounded-xl focus:ring-[#4A1D59]/20"
                                 value={formData.yearsOfService}
                                 onChange={(e) => handleNumericChange('yearsOfService', e.target.value)}
                             />
@@ -380,18 +379,18 @@ const ContactWorkInfoStep: React.FC<ContactWorkInfoStepProps> = ({ onNext, onBac
             </div>
 
             {/* Footer Actions */}
-            <div className="flex justify-between items-center mt-12 pt-4">
-                <Button onClick={onBack} variant="ghost" className="text-muted-foreground">{tc.back}</Button>
+            <div className="flex justify-between items-center mt-12 pt-6 border-t border-gray-100">
+                <Button onClick={onBack} variant="ghost" className="text-gray-400 font-medium hover:text-[#4A1D59]">{tc.back}</Button>
                 <div className="flex flex-col items-end gap-2">
                     {!isStepValid() && (
-                        <p className="text-[10px] text-red-500 font-medium">Please fill all required fields (*) correctly</p>
+                        <p className="text-[10px] text-red-500 font-bold animate-pulse">Required fields (*) missing or incorrect</p>
                     )}
                     <Button
                         onClick={() => onNext({ ...formData, residenceType, workType })}
                         disabled={!isStepValid()}
                         className={cn(
-                            "bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-lg px-8 py-6 text-sm font-medium transition-all",
-                            !isStepValid() && "opacity-50 cursor-not-allowed bg-gray-400"
+                            "bg-[#4A1D59] hover:bg-[#3d184a] text-white rounded-xl px-12 py-6 text-sm font-bold transition-all shadow-lg active:scale-95",
+                            !isStepValid() && "opacity-50 cursor-not-allowed bg-gray-400 grayscale shadow-none"
                         )}
                     >
                         {tc.continue}

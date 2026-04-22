@@ -199,3 +199,49 @@
 .data-table tbody tr:hover {
   @apply bg-muted/50;
 }
+
+/* Mobile Scrolling & Utilities */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mobile-scroll-row {
+    @apply flex overflow-x-auto snap-x snap-mandatory no-scrollbar;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Force elements to not wrap on mobile */
+  .mobile-no-wrap {
+    @apply whitespace-nowrap flex-nowrap;
+  }
+}
+
+/* Mobile Fixes (<= 480px) */
+@media (max-width: 480px) {
+  .mobile-padding {
+    @apply p-4 !important;
+  }
+  
+  .mobile-gap {
+    @apply gap-4 !important;
+  }
+
+  /* Ensure touch targets for buttons */
+  button, 
+  [role="button"] {
+    @apply transition-transform active:scale-95;
+    min-height: 44px;
+  }
+
+  /* Responsive Typography */
+  h1 { @apply text-2xl !important; }
+  h2 { @apply text-xl !important; }
+  h3 { @apply text-lg !important; }
+  p, span, div { @apply text-sm; }
+}

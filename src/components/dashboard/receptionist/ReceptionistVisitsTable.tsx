@@ -218,13 +218,13 @@ export const ReceptionistVisitsTable: React.FC = () => {
     };
 
     return (
-        <div className="bg-white rounded-xl border shadow-sm p-4">
-            <div className="flex justify-between items-center mb-6">
+        <div className="bg-white rounded-xl border shadow-sm p-3 md:p-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                 <h3 className="text-lg font-bold">Recent Leads</h3>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full md:w-auto overflow-x-auto no-scrollbar pb-1">
                     <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" size="sm" className="h-9 gap-2">
+                            <Button variant="outline" size="sm" className="h-10 md:h-9 gap-2 shrink-0">
                                 <Filter className="w-4 h-4" />
                                 Filter
                             </Button>
@@ -267,11 +267,12 @@ export const ReceptionistVisitsTable: React.FC = () => {
                     </Popover>
 
                     <Button
-                        className="bg-[#4A1D59] hover:bg-[#3d184a] h-9 gap-2"
+                        className="bg-[#4A1D59] hover:bg-[#3d184a] h-10 md:h-9 gap-2 shrink-0 px-4"
                         onClick={handleDownloadExcel}
                     >
                         <Download className="w-4 h-4" />
-                        Download Excel
+                        <span className="hidden xs:inline">Download Excel</span>
+                        <span className="xs:hidden">Excel</span>
                     </Button>
                 </div>
             </div>
@@ -279,21 +280,21 @@ export const ReceptionistVisitsTable: React.FC = () => {
             <div className="relative mb-6">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
-                    className="pl-9 bg-gray-50 border-gray-200 w-full"
-                    placeholder="Search by Unique ID or Customer Name..."
+                    className="pl-9 bg-gray-50 border-gray-200 w-full h-11 md:h-10"
+                    placeholder="Search leads..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
-            <div className="overflow-x-auto min-h-[300px] relative">
+            <div className="overflow-x-auto no-scrollbar min-h-[300px] relative rounded-lg border border-gray-100">
                 {isLoading ? (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/50 z-10">
                         <Loader2 className="w-8 h-8 animate-spin text-[#4A1D59]" />
                     </div>
                 ) : null}
 
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[900px]">
                     <thead>
                         <tr className="bg-gray-50 text-left text-gray-500">
                             <th className="p-3 font-medium rounded-l-lg">Unique ID</th>

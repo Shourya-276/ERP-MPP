@@ -35,47 +35,49 @@ const ReceptionistDashboard: React.FC = () => {
                 <ReceptionistSidebar />
 
                 {/* Main Content Area */}
-                <div className="flex-1 p-6 overflow-y-auto">
-                    <div className="space-y-2 max-w-7xl mx-auto">
-
+                <div className="flex-1 p-4 md:p-6 overflow-y-auto">
+                    <div className="space-y-4 md:space-y-6 max-w-7xl mx-auto">
+ 
                         {/* Top Section: Welcome Card & Calendar Widget */}
-                        <div className="flex gap-6 items-stretch">
+                        <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
                             <GreetingCard />
-                            <div className="w-[350px] shrink-0">
+                            <div className="w-full md:w-[350px] shrink-0">
                                 <CalendarWidget />
                             </div>
                         </div>
-
+ 
                         {/* Middle Section: Lead Overview Stats with Filters */}
                         {/* Negative margin used to visually pull this section closer to the cards above */}
-                        <div className="relative z-10">
-                            <div className="flex flex-col gap-4 mb-6 -mt-10">
+                        <div className="relative z-10 px-1">
+                            <div className="flex flex-col gap-4 mb-6 md:-mt-10">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-[#1a1a1a]">Your Lead Overview</h2>
-                                    <p className="text-sm text-gray-500 mt-1">Showing data for the last 30 days</p>
+                                    <h2 className="text-xl md:text-2xl font-bold text-[#1a1a1a]">Your Lead Overview</h2>
+                                    <p className="text-xs md:text-sm text-gray-500 mt-1">Showing data for the last 30 days</p>
                                 </div>
-
-                                {/* Time Period Filters */}
-                                <div className="bg-white p-2 rounded-full border shadow-sm inline-flex items-center gap-6 w-max">
-                                    {['Today', 'This Month', 'Nov', 'Oct', 'Sep'].map((filter) => (
-                                        <button
-                                            key={filter}
-                                            onClick={() => setActiveFilter(filter)}
-                                            className={`rounded-full text-sm font-medium transition-all ${activeFilter === filter
-                                                ? 'bg-[#4A1D59] text-white shadow-md px-5 py-1.5'
-                                                : 'text-[#4A1D59] hover:bg-purple-50 px-3 py-1.5'
-                                                }`}
-                                        >
-                                            {filter}
-                                        </button>
-                                    ))}
-                                    <div className="w-px h-6 bg-gray-200" /> {/* Visual Separator */}
-                                    <button className="p-2 text-[#4A1D59] hover:bg-purple-50 rounded-full">
-                                        <CalendarIcon className="w-5 h-5" />
+ 
+                                 {/* Time Period Filters */}
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
+                                        {['Today', 'This Month', 'Nov', 'Oct', 'Sep'].map((filter) => (
+                                            <button
+                                                key={filter}
+                                                onClick={() => setActiveFilter(filter)}
+                                                className={`rounded-xl text-[10px] md:text-sm font-bold transition-all whitespace-nowrap px-6 py-2.5 shadow-sm active:scale-95 ${activeFilter === filter
+                                                    ? 'bg-[#4A1D59] text-white shadow-purple-200'
+                                                    : 'text-gray-400 hover:text-[#4A1D59] hover:bg-purple-50/50'
+                                                    }`}
+                                            >
+                                                {filter}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="hidden md:block w-px h-6 bg-gray-200 mx-1" />
+                                    <button className="h-11 w-11 shrink-0 flex items-center justify-center text-[#4A1D59] hover:bg-white hover:shadow-md rounded-2xl border border-gray-100 transition-all active:scale-95">
+                                        <CalendarIcon className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
                                 </div>
                             </div>
-
+ 
                             {/* Statistics Cards */}
                             <ReceptionistStats />
                         </div>

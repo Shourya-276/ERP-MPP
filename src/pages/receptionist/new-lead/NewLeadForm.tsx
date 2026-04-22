@@ -97,12 +97,19 @@ const NewLeadForm: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
-            <header className="bg-[#4A1D59] p-4 text-white shadow-md">
-                <div className="w-full px-6 flex justify-between items-center">
+            <header className="bg-[#4A1D59] py-6 px-8 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)]"></div>
+                <div className="w-full flex justify-between items-center relative z-10">
                     <div className="flex items-center gap-4">
-                        <span className="hidden">Megaplex Prime</span>
+                        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/20">
+                             <div className="w-5 h-5 border-2 border-white rounded-sm rotate-45"></div>
+                        </div>
+                        <div className="flex flex-col">
+                            <h1 className="text-xl font-bold tracking-tight">{t.common.customerEnquiryForm}</h1>
+                            <p className="text-[10px] text-purple-200 uppercase tracking-widest font-bold">Megaplex Prime ERP</p>
+                        </div>
                     </div>
-                    <div className="text-xl font-medium">{t.common.customerEnquiryForm}</div>
+                    
                     <button
                         onClick={() => {
                             if (user?.role === 'RECEPTIONIST_2') {
@@ -111,9 +118,9 @@ const NewLeadForm: React.FC = () => {
                                 navigate('/receptionist');
                             }
                         }}
-                        className="text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                        className="bg-white/10 hover:bg-white/20 text-white p-2.5 rounded-full transition-all backdrop-blur-md border border-white/10 active:scale-90"
                     >
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
             </header>
@@ -121,11 +128,11 @@ const NewLeadForm: React.FC = () => {
             <main className="flex-1 w-full px-6 py-6 flex flex-col mx-auto xl:container">
                 {!isThankYouStep && (
                     <>
-                        <div className="mb-12 relative select-none w-full">
-                            <div className="absolute top-[20px] left-0 right-0 h-[2px] mx-5 z-0">
-                                <div className="w-full h-full bg-gray-200"></div>
+                        <div className="mb-12 relative select-none w-full max-w-4xl mx-auto px-4">
+                            <div className="absolute top-[20px] left-0 right-0 h-[3px] mx-8 z-0">
+                                <div className="w-full h-full bg-gray-100 rounded-full"></div>
                                 <div
-                                    className="absolute top-0 left-0 h-full bg-[#4A1D59] transition-all duration-300"
+                                    className="absolute top-0 left-0 h-full bg-[#4A1D59] transition-all duration-700 ease-in-out rounded-full shadow-[0_0_10px_rgba(74,29,89,0.3)]"
                                     style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
                                 ></div>
                             </div>
@@ -135,17 +142,17 @@ const NewLeadForm: React.FC = () => {
                                     <div key={step.number} className="flex flex-col items-center gap-3">
                                         <div
                                             className={cn(
-                                                "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2",
+                                                "w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-500 border-2",
                                                 currentStep >= step.number
-                                                    ? "bg-[#351C43] border-[#351C43] text-white shadow-md scale-110"
-                                                    : "bg-[#F3E8FF] border-[#F3E8FF] text-[#4A1D59]"
+                                                    ? "bg-[#4A1D59] border-[#4A1D59] text-white shadow-lg shadow-purple-200 scale-110"
+                                                    : "bg-white border-gray-100 text-gray-300"
                                             )}
                                         >
                                             {step.number}
                                         </div>
                                         <span className={cn(
-                                            "text-xs font-semibold whitespace-nowrap",
-                                            currentStep >= step.number ? "text-[#351C43]" : "text-gray-400"
+                                            "text-[10px] font-bold uppercase tracking-wider transition-colors duration-500",
+                                            currentStep >= step.number ? "text-[#4A1D59] scale-105" : "text-gray-300"
                                         )}>
                                             {step.label}
                                         </span>
@@ -154,15 +161,15 @@ const NewLeadForm: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex justify-end items-start mb-6 relative">
-                            <div className="bg-[#F3E8FF] rounded-full p-1 flex relative z-30 shadow-sm ml-4">
+                        <div className="flex justify-end items-start mb-8">
+                            <div className="bg-gray-100/50 p-1 rounded-2xl flex relative z-30 border border-gray-100">
                                 <button
                                     onClick={() => setLanguage('en')}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full text-xs font-medium transition-all relative z-40",
+                                        "px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all relative z-40",
                                         language === 'en'
-                                            ? "bg-[#E6D5F0] text-[#4A1D59] font-bold shadow-sm"
-                                            : "text-foreground/60 hover:bg-black/5"
+                                            ? "bg-white text-[#4A1D59] shadow-sm"
+                                            : "text-gray-400 hover:text-gray-600"
                                     )}
                                 >
                                     English
@@ -170,10 +177,10 @@ const NewLeadForm: React.FC = () => {
                                 <button
                                     onClick={() => setLanguage('mr')}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full text-xs font-medium transition-all relative z-40",
+                                        "px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all relative z-40",
                                         language === 'mr'
-                                            ? "bg-[#E6D5F0] text-[#4A1D59] font-bold shadow-sm"
-                                            : "text-foreground/60 hover:bg-black/5"
+                                            ? "bg-white text-[#4A1D59] shadow-sm"
+                                            : "text-gray-400 hover:text-gray-600"
                                     )}
                                 >
                                     मराठी
