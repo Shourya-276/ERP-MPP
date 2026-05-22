@@ -1,6 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Trash2, X, Check } from 'lucide-react';
 import { translations, Language } from '../translations';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import SignatureCanvas from 'react-signature-canvas';
+import { cn } from '@/lib/utils';
 
 interface FeedbackStepProps {
     onNext: (data: any) => void;
