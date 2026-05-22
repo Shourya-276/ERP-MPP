@@ -6,6 +6,11 @@ import leadRoutes from './routes/leadRoutes';
 import cpRoutes from './routes/cpRoutes';
 import adminRoutes from './routes/adminRoutes';
 
+// Force Vercel to bundle the prisma CLI for the automatic migrations
+try {
+    require('prisma');
+} catch (e) {}
+
 const app = express();
 
 // Dynamic CORS setup to handle any Vercel/localhost origins cleanly
