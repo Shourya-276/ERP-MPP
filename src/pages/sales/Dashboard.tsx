@@ -28,7 +28,7 @@ const SalesDashboard: React.FC = () => {
     <div className="min-h-screen bg-muted/30">
       <DashboardHeader />
 
-      <div className="flex">
+      <div className="flex h-[calc(100vh-64px)] overflow-hidden">
         <SalesSidebar />
 
         <main className="flex-1 p-5 overflow-auto">
@@ -38,7 +38,7 @@ const SalesDashboard: React.FC = () => {
               <SalesGreetingCard />
             </div>
             {/* Calendar Widget wrapper with fixed width wider than Alerts */}
-            <div className="w-[350px] h-[180px] shrink-0">
+            <div className="w-[350px] h-[280px] shrink-0">
               <CalendarWidget />
             </div>
           </div>

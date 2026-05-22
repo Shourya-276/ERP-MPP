@@ -35,7 +35,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, hasSubmenu, on
       }`}
   >
     {icon}
-    <span className="flex-1 text-left">{label}</span>
+    <span className="flex-1 text-left font-medium">{label}</span>
     {hasSubmenu && <ChevronDown className="w-4 h-4" />}
   </button>
 );
@@ -43,66 +43,128 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, hasSubmenu, on
 const SalesSidebar: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const currentPath = window.location.pathname;
+
+  // Initialize state based on current path
+  const [expandedSection, setExpandedSection] = React.useState<'dashboard' | 'projects' | null>(
+    currentPath.startsWith('/sales') ? 'dashboard' : 
+    currentPath.startsWith('/projects') ? 'projects' : 'dashboard'
+  );
 
   const handleLogout = async () => {
     await logout();
     navigate('/');
   };
 
+  const toggleSection = (section: 'dashboard' | 'projects') => {
+    setExpandedSection(prev => prev === section ? null : section);
+  };
+
   return (
     <aside
-      className="h-[calc(100vh-64px)] flex flex-col"
+      className="h-[calc(100vh-64px)] flex flex-col shrink-0"
       style={{
-        width: '180px',
+        width: '200px',
         background: '#FBF2FF',
       }}
     >
-      <div className="p-3 flex-1 overflow-y-auto">
-        <p className="text-xs text-muted-foreground px-3 mb-2">Main Menu</p>
+      <div className="p-3 flex-1 overflow-y-auto no-scrollbar">
+        <p className="text-[10px] font-black text-gray-400 px-3 mb-3 uppercase tracking-widest">Main Menu</p>
 
         <nav className="space-y-1">
           <NavItem
             icon={<LayoutDashboard className="w-4 h-4" />}
             label="Dashboard"
-            isActive
+            isActive={expandedSection === 'dashboard'}
+            hasSubmenu
+            onClick={() => toggleSection('dashboard')}
           />
 
-          <div className="pl-3 space-y-1 text-xs">
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              — Sales Dashboard
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Leads
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Site Visit
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Revisit
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Sales Report
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Payment
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Cancellation
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Registration
-            </button>
-            <button className="w-full text-left py-1.5 text-muted-foreground hover:text-foreground">
-              Incentive
-            </button>
-          </div>
+          {expandedSection === 'dashboard' && (
+            <div className="pl-3 space-y-1 animate-in slide-in-from-top-2 duration-200">
+              <button 
+                onClick={() => navigate('/sales')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                — Sales Dashboard
+              </button>
+              <button 
+                onClick={() => navigate('/sales/leads')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/leads' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Leads
+              </button>
+              <button 
+                onClick={() => navigate('/sales/site-visit')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/site-visit' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Site Visit
+              </button>
+              <button 
+                onClick={() => navigate('/sales/revisit')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/revisit' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Revisit
+              </button>
+              <button 
+                onClick={() => navigate('/sales/report')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/report' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Sales Report
+              </button>
+              <button 
+                onClick={() => navigate('/sales/payment')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/payment' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Payment
+              </button>
+              <button 
+                onClick={() => navigate('/sales/cancellation')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/cancellation' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Cancellation
+              </button>
+              <button 
+                onClick={() => navigate('/sales/registration')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/registration' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Registration
+              </button>
+              <button 
+                onClick={() => navigate('/sales/incentive')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/sales/incentive' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Incentive
+              </button>
+            </div>
+          )}
 
           <NavItem
             icon={<FolderOpen className="w-4 h-4" />}
             label="Projects"
+            isActive={expandedSection === 'projects'}
+            hasSubmenu
+            onClick={() => toggleSection('projects')}
           />
 
-          <p className="text-xs text-muted-foreground px-3 mt-4 mb-2">Others</p>
+          {expandedSection === 'projects' && (
+            <div className="pl-3 space-y-1 animate-in slide-in-from-top-2 duration-200">
+              <button 
+                onClick={() => navigate('/projects/dashboard')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/projects/dashboard' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                — Project Dashboard
+              </button>
+              <button 
+                onClick={() => navigate('/projects/market-value')}
+                className={`w-full text-left py-1.5 px-3 rounded-lg text-xs transition-all ${currentPath === '/projects/market-value' ? 'text-[#4A1D59] font-bold bg-white/50 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-white/30'}`}
+              >
+                Market Value
+              </button>
+            </div>
+          )}
+
+          <p className="text-[10px] font-black text-gray-400 px-3 mt-6 mb-3 uppercase tracking-widest">Others</p>
 
           <NavItem
             icon={<Settings className="w-4 h-4" />}
@@ -117,11 +179,11 @@ const SalesSidebar: React.FC = () => {
       </div>
 
       {/* Bottom illustration */}
-      <div className="p-3">
+      <div className="p-4 border-t border-purple-100/50">
         <img
           src={sidebarIllustration}
           alt="Team"
-          className="w-full h-auto opacity-80"
+          className="w-full h-auto opacity-80 mix-blend-multiply"
         />
       </div>
     </aside>

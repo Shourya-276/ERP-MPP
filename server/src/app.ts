@@ -8,16 +8,9 @@ import adminRoutes from './routes/adminRoutes';
 
 const app = express();
 
-// Standard Middlewares
+// Dynamic CORS setup to handle any Vercel/localhost origins cleanly
 app.use(cors({
-    origin: [
-        'http://65.2.39.93:8080',
-        'http://localhost:8080',
-        'http://localhost:5173',
-        'http://localhost:3000',
-        'http://127.0.0.1:8080',
-        'http://127.0.0.1:5173'
-    ],
+    origin: true,
     credentials: true
 }));
 app.use(express.json());
@@ -28,6 +21,66 @@ app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/cps', cpRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Database Seeding Route (Securely seeds Neon DB directly from Vercel)
+app.get('/api/seed', async (req, res) => {
+    try {
+        const { PrismaClient, Role } = await import('@prisma/client');
+        const bcrypt = await import('bcryptjs');
+        const prisma = new PrismaClient();
+        const hashedPassword = await bcrypt.default.hash('1234', 10);
+
+        const users = [
+            {
+                email: 'recep@gmail.com',
+                name: 'Sara',
+                password: hashedPassword,
+                role: Role.RECEPTIONIST,
+            },
+            {
+                email: 'sales@gmail.com',
+                name: 'Priya',
+                password: hashedPassword,
+                role: Role.SALES_EXECUTIVE,
+            },
+            {
+                email: 'recep2@gmail.com',
+                name: 'Sara Ipad',
+                password: hashedPassword,
+                role: Role.RECEPTIONIST_2,
+            }
+        ];
+
+        for (const userData of users) {
+            await prisma.user.upsert({
+                where: { email: userData.email },
+                update: {
+                    password: userData.password,
+                    role: userData.role
+                },
+                create: userData,
+            });
+        }
+
+        const projects = [
+            { name: 'Skyline Residency', location: 'Vikhroli' },
+            { name: 'Green Valley', location: 'Thane' },
+            { name: 'Ocean View', location: 'Worli' }
+        ];
+
+        for (const projectData of projects) {
+            await prisma.project.upsert({
+                where: { name: projectData.name },
+                update: {},
+                create: projectData,
+            });
+        }
+
+        res.json({ status: 'success', message: '✅ Database seeded successfully with default users and projects!' });
+    } catch (error: any) {
+        res.status(500).json({ status: 'error', error: error.message });
+    }
+});
 
 // Health Check
 app.get('/health', (req, res) => {

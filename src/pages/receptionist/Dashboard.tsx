@@ -41,7 +41,7 @@ const ReceptionistDashboard: React.FC = () => {
                         {/* Top Section: Welcome Card & Calendar Widget */}
                         <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch">
                             <GreetingCard />
-                            <div className="w-full md:w-[350px] shrink-0">
+                            <div className="w-full md:w-[350px] shrink-0 min-h-[280px]">
                                 <CalendarWidget />
                             </div>
                         </div>

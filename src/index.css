@@ -220,6 +220,26 @@
   .mobile-no-wrap {
     @apply whitespace-nowrap flex-nowrap;
   }
+
+  /* Megaplex Custom Scrollbar */
+  .megaplex-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  .megaplex-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+
+  .megaplex-scrollbar::-webkit-scrollbar-thumb {
+    background: #4A1D59;
+    border-radius: 10px;
+  }
+
+  .megaplex-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #371D45;
+  }
 }
 
 /* Mobile Fixes (<= 480px) */

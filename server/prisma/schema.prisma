@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -106,7 +106,7 @@ model Lead {
   cpFirm          String?
   cpExec          String?
   cpPhone         String?
-  signature       String?    @db.LongText // Base64 signature
+  signature       String?    @db.Text // Base64 signature
   consent         Boolean    @default(true)
   
   // Metadata

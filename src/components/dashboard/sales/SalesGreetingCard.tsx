@@ -8,15 +8,15 @@ const SalesGreetingCard: React.FC = () => {
       className="relative rounded-3xl p-6 overflow-hidden flex-1"
       style={{
         background: 'linear-gradient(95.19deg, #FFFAE5 0%, #FFF5D6 49.86%, #FFE780 99.71%)',
-        height: '180px',
+        height: '280px',
         borderTop: '1px solid #FFF08580',
         boxShadow: '0px 8px 10px -6px #FFF08580, 0px 20px 25px -12px #FFF08580'
       }}
     >
-      <div className="relative z-10 w-2/3">
+      <div className="relative z-10 w-2/3 h-full flex flex-col justify-center">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-amber-600">👋</span>
-          <span className="text-sm font-medium text-amber-700">Welcome Back</span>
+          <span className="text-amber-600 text-xl">👋</span>
+          <span className="text-sm font-bold text-amber-700 uppercase tracking-wider">Welcome Back</span>
         </div>
 
         <h1 className="text-2xl font-bold text-foreground mb-2">
@@ -37,7 +37,7 @@ const SalesGreetingCard: React.FC = () => {
       <img
         src={saraIllustration}
         alt="Sara"
-        className="absolute -right-4 -bottom-[36px] h-[220px] object-contain pointer-events-none"
+        className="absolute -right-4 -bottom-[40px] h-[320px] object-contain pointer-events-none drop-shadow-xl"
       />
     </div>
   );
