@@ -29,7 +29,7 @@ app.get('/api/seed', async (req, res) => {
         
         console.log('Pushing database schema directly from Vercel serverless environment...');
         // Automatically create and sync the database tables in Neon
-        execSync('npx prisma db push', { stdio: 'inherit' });
+        execSync('npx prisma db push', { stdio: 'pipe' });
         console.log('Database schema pushed successfully!');
 
         const { PrismaClient, Role } = await import('@prisma/client');
@@ -86,7 +86,17 @@ app.get('/api/seed', async (req, res) => {
         res.json({ status: 'success', message: '✅ Database schema created and seeded successfully with default users and projects!' });
     } catch (error: any) {
         console.error('Seeding error:', error);
-        res.status(500).json({ status: 'error', error: error.message || error });
+        
+        // If the shell command failed, capture the exact output to show on screen
+        let details = '';
+        if (error.stdout) details += `\nSTDOUT:\n${error.stdout.toString()}`;
+        if (error.stderr) details += `\nSTDERR:\n${error.stderr.toString()}`;
+        
+        res.status(500).json({ 
+            status: 'error', 
+            error: error.message || error,
+            details: details || undefined
+        });
     }
 });
 
