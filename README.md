@@ -1,73 +1,77 @@
-# Welcome to your Lovable project
+# Property ERP - Real Estate Management Platform
 
-## Project info
+A comprehensive, state-of-the-art Real Estate ERP platform designed to track and convert leads, monitor sales growth, measure team performance, and manage site bookings and registrations dynamically.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🚀 Key Features
 
-There are several ways of editing your application.
+* **Lead Management**: Complete receptionist workflow to add and follow up on customer enquiries with multilingual support (English and Marathi), signature capture, and CP (Channel Partner) tracking.
+* **Sales Dashboard**: Comprehensive performance analytics, booking flows, cost sheet generators, and revisit trackers.
+* **Role-Based Access**: Specialized interfaces for Receptionists, Receptionist 2 (iPad view), Sales Executives, and Admins.
+* **Connected Database**: Powered by PostgreSQL (Neon) and Prisma ORM for seamless, resilient data modeling.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🛠️ Technology Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+* **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI.
+* **Backend**: Node.js, Express, ts-node, nodemon.
+* **Database & ORM**: PostgreSQL, Prisma Client.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 💻 Local Setup & Development
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 1. Prerequisites
+Ensure you have Node.js and npm installed on your system.
 
-Follow these steps:
+### 2. Installation
+Clone the repository and install all dependencies:
+```bash
+# Install root dependencies
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Install server dependencies (runs automatically postinstall, or manually)
+npm install --prefix server
 ```
 
-**Edit a file directly in GitHub**
+### 3. Environment Configuration
+Create a `.env` file in the `server` directory and configure the database URL:
+```env
+DATABASE_URL="postgresql://user:password@host/db?sslmode=require"
+PORT=5001
+NODE_ENV=development
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 4. Database Setup & Seeding
+Push the database schema and seed the initial users and projects:
+```bash
+cd server
+npx prisma db push
+npx prisma generate
+npm run seed
+```
 
-**Use GitHub Codespaces**
+### 5. Running the Application Locally
+Run the development servers for both frontend and backend:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+* **Start the Frontend Development Server** (from root):
+  ```bash
+  npm run dev
+  ```
+* **Start the Backend Server** (from `server` directory):
+  ```bash
+  npm run dev
+  ```
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 📦 Deployment on Vercel
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Both the React frontend and the Express backend are unified under a single monorepo config.
+To deploy:
+1. Push your changes to your Git repository.
+2. Import the repository in **Vercel**.
+3. Set your environment variables (like `DATABASE_URL`).
+4. Vercel will automatically build the static frontend assets and serve the backend endpoints under `/api`.
