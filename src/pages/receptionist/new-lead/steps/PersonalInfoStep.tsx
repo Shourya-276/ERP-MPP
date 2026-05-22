@@ -146,20 +146,20 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
     };
 
     const isStepValid = () => {
-        const requiredFields = [
+        const hasRequired = [
             formData.firstName,
             formData.lastName,
             formData.gender,
             formData.age,
             formData.nationality,
-            formData.aadhar.length === 12, // Aadhar must be 12 digits
             formData.email,
             formData.phone.length === 10,
             formData.maritalStatus
-        ];
+        ].every(field => field);
 
-        // If married, spouse name might be mandatory or not. I'll stick to basic required for now.
-        return requiredFields.every(field => field);
+        const isAadharValid = !formData.aadhar || formData.aadhar.length === 12;
+
+        return hasRequired && isAadharValid;
     };
 
     return (
@@ -311,7 +311,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onNext, language, i
 
                 {/* Row 3.5: Aadhar Card */}
                 <div className="md:col-span-2 space-y-2">
-                    <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.aadhar}<span className="text-red-500">*</span></label>
+                    <label className="text-xs font-bold text-[#4A1D59] uppercase tracking-wider">{t.aadhar}</label>
                     <Input
                         placeholder="Enter 12 digit Aadhar number"
                         className="bg-[#FDFCFD] border-gray-200 h-12 rounded-xl focus:ring-[#4A1D59]/20"
