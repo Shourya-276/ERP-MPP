@@ -30,13 +30,6 @@ app.use('/api/admin', adminRoutes);
 // Database Seeding Route (Securely seeds Neon DB directly from Vercel)
 app.get('/api/seed', async (req, res) => {
     try {
-        const { execSync } = await import('child_process');
-        
-        console.log('Pushing database schema directly from Vercel serverless environment...');
-        // Automatically create and sync the database tables in Neon
-        execSync('HOME=/tmp node node_modules/prisma/build/index.js db push', { stdio: 'pipe' });
-        console.log('Database schema pushed successfully!');
-
         const { PrismaClient, Role } = await import('@prisma/client');
         const bcrypt = await import('bcryptjs');
         const prisma = new PrismaClient();
