@@ -29,7 +29,7 @@ app.get('/api/seed', async (req, res) => {
         
         console.log('Pushing database schema directly from Vercel serverless environment...');
         // Automatically create and sync the database tables in Neon
-        execSync('npx prisma db push', { stdio: 'pipe' });
+        execSync('HOME=/tmp node node_modules/prisma/build/index.js db push', { stdio: 'pipe' });
         console.log('Database schema pushed successfully!');
 
         const { PrismaClient, Role } = await import('@prisma/client');
