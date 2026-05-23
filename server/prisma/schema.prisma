@@ -167,6 +167,7 @@ model ChannelPartner {
   firmName    String
   phone       String   @unique
   email       String?
+  location    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

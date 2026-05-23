@@ -38,7 +38,8 @@ import {
     MapPin,
     Briefcase,
     Search,
-    RefreshCw
+    RefreshCw,
+    Handshake
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
@@ -53,11 +54,28 @@ interface Lead {
     createdAt: string;
 }
 
+interface ChannelPartner {
+    id: number;
+    cpName: string;
+    firmName: string;
+    phone: string;
+    email: string | null;
+    location: string | null;
+    createdAt: string;
+}
+
 const AdminDashboard: React.FC = () => {
+    const [activeTab, setActiveTab] = useState<'leads' | 'cps'>('leads');
     const [leads, setLeads] = useState<Lead[]>([]);
     const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // Channel Partners States
+    const [cps, setCps] = useState<ChannelPartner[]>([]);
+    const [filteredCps, setFilteredCps] = useState<ChannelPartner[]>([]);
+    const [isCpsLoading, setIsCpsLoading] = useState(false);
+    const [cpSearchTerm, setCpSearchTerm] = useState('');
 
     // Selection for Detail Drawer
     const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
@@ -80,6 +98,7 @@ const AdminDashboard: React.FC = () => {
             return;
         }
         fetchLeads();
+        fetchCps();
     }, [navigate]);
 
     useEffect(() => {
@@ -90,6 +109,17 @@ const AdminDashboard: React.FC = () => {
         );
         setFilteredLeads(results);
     }, [searchTerm, leads]);
+
+    useEffect(() => {
+        const results = cps.filter(cp =>
+            cp.cpName?.toLowerCase().includes(cpSearchTerm.toLowerCase()) ||
+            cp.firmName?.toLowerCase().includes(cpSearchTerm.toLowerCase()) ||
+            cp.phone?.includes(cpSearchTerm) ||
+            cp.email?.toLowerCase().includes(cpSearchTerm.toLowerCase()) ||
+            cp.location?.toLowerCase().includes(cpSearchTerm.toLowerCase())
+        );
+        setFilteredCps(results);
+    }, [cpSearchTerm, cps]);
 
     const fetchLeads = async () => {
         setIsLoading(true);
@@ -106,6 +136,24 @@ const AdminDashboard: React.FC = () => {
             });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const fetchCps = async () => {
+        setIsCpsLoading(true);
+        try {
+            const response = await api.get('/cps');
+            const data = response.data;
+            setCps(data);
+            setFilteredCps(data);
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to fetch Channel Partners",
+            });
+        } finally {
+            setIsCpsLoading(false);
         }
     };
 
@@ -197,112 +245,236 @@ const AdminDashboard: React.FC = () => {
                                 <div className="text-2xl font-bold">{leads.length}</div>
                             </CardContent>
                         </Card>
+                        <Card className="shadow-sm border-none bg-white">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-muted-foreground">Total Channel Partners</CardTitle>
+                                <Handshake className="h-4 w-4 text-[#FF5500]" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{cps.length}</div>
+                            </CardContent>
+                        </Card>
                     </div>
 
-                    {/* Table View */}
-                    <Card className="shadow-sm border-none bg-white">
-                        <CardHeader>
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <CardTitle>Leads Overview</CardTitle>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Manage and view all incoming leads from various sources
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="relative w-full md:w-64">
-                                        <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input
-                                            placeholder="Search leads..."
-                                            className="pl-10"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
+                    {/* Premium Tab Selector */}
+                    <div className="flex border-b border-slate-200 gap-2">
+                        <button
+                            onClick={() => setActiveTab('leads')}
+                            className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+                                activeTab === 'leads'
+                                    ? 'border-primary text-primary font-semibold'
+                                    : 'border-transparent text-muted-foreground hover:text-slate-800'
+                            }`}
+                        >
+                            <Users className="h-4 w-4" />
+                            Leads ({leads.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('cps')}
+                            className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+                                activeTab === 'cps'
+                                    ? 'border-[#FF5500] text-[#FF5500] font-semibold'
+                                    : 'border-transparent text-muted-foreground hover:text-slate-800'
+                            }`}
+                        >
+                            <Handshake className="h-4 w-4" />
+                            Channel Partners ({cps.length})
+                        </button>
+                    </div>
+
+                    {activeTab === 'leads' ? (
+                        /* Table View for Leads */
+                        <Card className="shadow-sm border-none bg-white">
+                            <CardHeader>
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <CardTitle>Leads Overview</CardTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            Manage and view all incoming leads from various sources
+                                        </p>
                                     </div>
-                                    <Button variant="outline" size="icon" onClick={fetchLeads} disabled={isLoading}>
-                                        <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative w-full md:w-64">
+                                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                            <Input
+                                                placeholder="Search leads..."
+                                                className="pl-10"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                            />
+                                        </div>
+                                        <Button variant="outline" size="icon" onClick={fetchLeads} disabled={isLoading}>
+                                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="rounded-md border overflow-hidden">
-                                <Table>
-                                    <TableHeader className="bg-slate-50">
-                                        <TableRow>
-                                            <TableHead className="w-[120px]">ID</TableHead>
-                                            <TableHead>Customer Name</TableHead>
-                                            <TableHead>Contact</TableHead>
-                                            <TableHead>Source</TableHead>
-                                            <TableHead>Purpose</TableHead>
-                                            <TableHead>Scheduled Date</TableHead>
-                                            <TableHead className="text-right">Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {isLoading ? (
-                                            Array(5).fill(0).map((_, i) => (
-                                                <TableRow key={i}>
-                                                    <TableCell colSpan={7} className="h-12 animate-pulse bg-slate-100/50"></TableCell>
-                                                </TableRow>
-                                            ))
-                                        ) : filteredLeads.length === 0 ? (
+                            </CardHeader>
+                            <CardContent>
+                                <div className="rounded-md border overflow-hidden">
+                                    <Table>
+                                        <TableHeader className="bg-slate-50">
                                             <TableRow>
-                                                <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
-                                                    No leads found
-                                                </TableCell>
+                                                <TableHead className="w-[120px]">ID</TableHead>
+                                                <TableHead>Customer Name</TableHead>
+                                                <TableHead>Contact</TableHead>
+                                                <TableHead>Source</TableHead>
+                                                <TableHead>Purpose</TableHead>
+                                                <TableHead>Scheduled Date</TableHead>
+                                                <TableHead className="text-right">Actions</TableHead>
                                             </TableRow>
-                                        ) : (
-                                            filteredLeads.map((lead) => (
-                                                <TableRow key={lead.id} className="hover:bg-slate-50/50 transition-colors">
-                                                    <TableCell className="font-medium text-primary">
-                                                        {lead.friendlyId}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <button
-                                                            onClick={() => fetchLeadDetails(lead.friendlyId)}
-                                                            className="hover:underline font-medium text-left"
-                                                        >
-                                                            {lead.customerName}
-                                                        </button>
-                                                    </TableCell>
-                                                    <TableCell>{lead.phone}</TableCell>
-                                                    <TableCell>
-                                                        <Badge variant="secondary" className="font-normal capitalize">
-                                                            {lead.source?.toLowerCase().replace('_', ' ')}
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="text-muted-foreground">{lead.purpose || '-'}</TableCell>
-                                                    <TableCell>{new Date(lead.createdAt).toLocaleDateString()}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        <div className="flex justify-end gap-2">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                onClick={() => fetchLeadDetails(lead.friendlyId)}
-                                                            >
-                                                                <Eye className="h-4 w-4 text-slate-600" />
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                onClick={() => {
-                                                                    setDeleteConfirmId(lead.friendlyId);
-                                                                    setIsDeleteDialogOpen(true);
-                                                                }}
-                                                            >
-                                                                <Trash2 className="h-4 w-4 text-red-500" />
-                                                            </Button>
-                                                        </div>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {isLoading ? (
+                                                Array(5).fill(0).map((_, i) => (
+                                                    <TableRow key={i}>
+                                                        <TableCell colSpan={7} className="h-12 animate-pulse bg-slate-100/50"></TableCell>
+                                                    </TableRow>
+                                                ))
+                                            ) : filteredLeads.length === 0 ? (
+                                                <TableRow>
+                                                    <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
+                                                        No leads found
                                                     </TableCell>
                                                 </TableRow>
-                                            ))
-                                        )}
-                                    </TableBody>
-                                </Table>
-                            </div>
-                        </CardContent>
-                    </Card>
+                                            ) : (
+                                                filteredLeads.map((lead) => (
+                                                    <TableRow key={lead.id} className="hover:bg-slate-50/50 transition-colors">
+                                                        <TableCell className="font-medium text-primary">
+                                                            {lead.friendlyId}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <button
+                                                                onClick={() => fetchLeadDetails(lead.friendlyId)}
+                                                                className="hover:underline font-medium text-left"
+                                                            >
+                                                                {lead.customerName}
+                                                            </button>
+                                                        </TableCell>
+                                                        <TableCell>{lead.phone}</TableCell>
+                                                        <TableCell>
+                                                            <Badge variant="secondary" className="font-normal capitalize">
+                                                                {lead.source?.toLowerCase().replace('_', ' ')}
+                                                            </Badge>
+                                                        </TableCell>
+                                                        <TableCell className="text-muted-foreground">{lead.purpose || '-'}</TableCell>
+                                                        <TableCell>{new Date(lead.createdAt).toLocaleDateString()}</TableCell>
+                                                        <TableCell className="text-right">
+                                                            <div className="flex justify-end gap-2">
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    onClick={() => fetchLeadDetails(lead.friendlyId)}
+                                                                >
+                                                                    <Eye className="h-4 w-4 text-slate-600" />
+                                                                </Button>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    onClick={() => {
+                                                                        setDeleteConfirmId(lead.friendlyId);
+                                                                        setIsDeleteDialogOpen(true);
+                                                                    }}
+                                                                >
+                                                                    <Trash2 className="h-4 w-4 text-red-500" />
+                                                                </Button>
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        /* Table View for Channel Partners */
+                        <Card className="shadow-sm border-none bg-white">
+                            <CardHeader>
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <CardTitle>Channel Partners Overview</CardTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            Manage and view registered Channel Partners
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative w-full md:w-64">
+                                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                            <Input
+                                                placeholder="Search CPs..."
+                                                className="pl-10"
+                                                value={cpSearchTerm}
+                                                onChange={(e) => setCpSearchTerm(e.target.value)}
+                                            />
+                                        </div>
+                                        <Button variant="outline" size="icon" onClick={fetchCps} disabled={isCpsLoading}>
+                                            <RefreshCw className={`h-4 w-4 ${isCpsLoading ? 'animate-spin' : ''}`} />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="rounded-md border overflow-hidden">
+                                    <Table>
+                                        <TableHeader className="bg-slate-50">
+                                            <TableRow>
+                                                <TableHead>CP Name</TableHead>
+                                                <TableHead>Firm Name</TableHead>
+                                                <TableHead>Phone</TableHead>
+                                                <TableHead>Email</TableHead>
+                                                <TableHead>Location</TableHead>
+                                                <TableHead>Registered Date</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {isCpsLoading ? (
+                                                Array(5).fill(0).map((_, i) => (
+                                                    <TableRow key={i}>
+                                                        <TableCell colSpan={6} className="h-12 animate-pulse bg-slate-100/50"></TableCell>
+                                                    </TableRow>
+                                                ))
+                                            ) : filteredCps.length === 0 ? (
+                                                <TableRow>
+                                                    <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                                                        No Channel Partners found
+                                                    </TableCell>
+                                                </TableRow>
+                                            ) : (
+                                                filteredCps.map((cp) => (
+                                                    <TableRow key={cp.id} className="hover:bg-slate-50/50 transition-colors">
+                                                        <TableCell className="font-semibold text-slate-900">
+                                                            {cp.cpName}
+                                                        </TableCell>
+                                                        <TableCell className="font-medium text-slate-700">
+                                                            {cp.firmName}
+                                                        </TableCell>
+                                                        <TableCell>{cp.phone}</TableCell>
+                                                        <TableCell className="text-muted-foreground">
+                                                            {cp.email || '-'}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {cp.location ? (
+                                                                <div className="flex items-center gap-1.5 text-slate-800">
+                                                                    <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                                                                    <span>{cp.location}</span>
+                                                                </div>
+                                                            ) : (
+                                                                <span className="text-slate-400 italic">Not provided</span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {new Date(cp.createdAt).toLocaleDateString()}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </main>
 

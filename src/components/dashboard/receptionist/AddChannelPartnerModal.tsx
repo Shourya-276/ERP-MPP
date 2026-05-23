@@ -17,6 +17,7 @@ export const AddChannelPartnerModal: React.FC<AddChannelPartnerModalProps> = ({ 
     const [firmName, setFirmName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
+    const [location, setLocation] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async () => {
@@ -31,7 +32,8 @@ export const AddChannelPartnerModal: React.FC<AddChannelPartnerModalProps> = ({ 
                 cpName,
                 firmName,
                 phone,
-                email
+                email,
+                location
             });
 
             toast.success('Channel Partner registered successfully!');
@@ -41,6 +43,7 @@ export const AddChannelPartnerModal: React.FC<AddChannelPartnerModalProps> = ({ 
             setFirmName('');
             setPhone('');
             setEmail('');
+            setLocation('');
 
             onOpenChange(false);
         } catch (error: any) {
@@ -118,6 +121,21 @@ export const AddChannelPartnerModal: React.FC<AddChannelPartnerModalProps> = ({ 
                             placeholder="Enter email address"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            className="bg-gray-50 border-gray-200 h-11"
+                            disabled={isSubmitting}
+                        />
+                    </div>
+
+                    {/* Location */}
+                    <div className="space-y-2">
+                        <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+                            Location
+                        </Label>
+                        <Input
+                            id="location"
+                            placeholder="Enter location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
                             className="bg-gray-50 border-gray-200 h-11"
                             disabled={isSubmitting}
                         />

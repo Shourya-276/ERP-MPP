@@ -1,7 +1,7 @@
 import prisma from '../config/prisma';
 
 export class ChannelPartnerService {
-    static async createCP(data: { cpName: string; firmName: string; phone: string; email?: string }) {
+    static async createCP(data: { cpName: string; firmName: string; phone: string; email?: string; location?: string }) {
         // Check if phone already exists
         const existingCP = await prisma.channelPartner.findUnique({
             where: { phone: data.phone }
@@ -16,7 +16,8 @@ export class ChannelPartnerService {
                 cpName: data.cpName,
                 firmName: data.firmName,
                 phone: data.phone,
-                email: data.email
+                email: data.email,
+                location: data.location
             }
         });
     }
