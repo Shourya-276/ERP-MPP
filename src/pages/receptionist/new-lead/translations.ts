@@ -28,7 +28,7 @@ export const translations = {
             clear: "Clear",
         },
         personalInfo: {
-            dob: "Date of Birth",
+            dob: "Date",
             photo: "Photo",
             takePhoto: "Take a photo",
             title: "Prefix",
@@ -170,7 +170,7 @@ export const translations = {
             clear: "साफ करा",
         },
         personalInfo: {
-            dob: "जन्म तारीख",
+            dob: "तारीख",
             photo: "फोटो",
             takePhoto: "फोटो घ्या",
             title: "शीर्षक",

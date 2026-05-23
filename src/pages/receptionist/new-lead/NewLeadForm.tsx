@@ -13,6 +13,14 @@ import { translations, Language } from './translations';
 import api from '@/lib/api';
 import { toast } from 'sonner';
 
+const getTodayDateString = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+};
+
 const NewLeadForm: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -33,7 +41,7 @@ const NewLeadForm: React.FC = () => {
         nationality: '',
         aadhar: '',
         maritalStatus: '',
-        dob: '',
+        dob: getTodayDateString(),
 
         // Step 2 & 3 (to be filled by steps)
         occupation: '',

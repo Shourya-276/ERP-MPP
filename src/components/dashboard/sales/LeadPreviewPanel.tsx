@@ -334,7 +334,7 @@ const LeadPreviewPanel: React.FC<LeadPreviewPanelProps> = ({ isOpen, onClose, le
                         title="Lead Enquiry Info" 
                         items={[
                           { label: 'Gender', value: 'Male' },
-                          { label: 'Date of Birth', value: '' },
+                          { label: 'Date', value: '' },
                           { label: 'Marital Status', value: '' },
                           { label: 'Anniversary Date', value: '' },
                           { label: 'Lead Source', value: '99 Acres' },
