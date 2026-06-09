@@ -8,6 +8,7 @@ import { AddChannelPartnerModal } from '@/components/dashboard/receptionist/AddC
 import { AddRevisitModal } from '@/components/dashboard/receptionist/AddRevisitModal';
 import { FeedbackFormModal } from '@/components/dashboard/receptionist/FeedbackFormModal';
 import { IpadSearch } from '@/components/dashboard/receptionist/IpadSearch';
+import OfflineStatusBanner from '@/components/OfflineStatusBanner';
 
 /**
  * IpadView Component
@@ -45,6 +46,7 @@ const IpadView: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
+            <OfflineStatusBanner />
             {/* Header */}
             <header className="bg-[#4A1D59] p-4 shadow-md shrink-0">
                 <div className="w-full px-2 md:px-6">

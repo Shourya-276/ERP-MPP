@@ -10,7 +10,26 @@ export const createLead = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         console.error('Create lead error:', error);
-        res.status(400).json({ error: error.message || 'Failed to create lead' });
+
+        // Detect Prisma / database connectivity errors and return 503 so the
+        // frontend can fall back to the offline queue instead of showing a
+        // hard failure.
+        const msg = error.message || '';
+        const isDbConnError =
+            error.constructor?.name === 'PrismaClientInitializationError' ||
+            error.constructor?.name === 'PrismaClientKnownRequestError' ||
+            msg.includes("Can't reach database") ||
+            msg.includes('connection pool') ||
+            msg.includes('Timed out') ||
+            msg.includes('database server') ||
+            msg.includes('ECONNREFUSED') ||
+            msg.includes('ETIMEDOUT');
+
+        if (isDbConnError) {
+            res.status(503).json({ error: msg || 'Database temporarily unavailable' });
+        } else {
+            res.status(400).json({ error: msg || 'Failed to create lead' });
+        }
     }
 };
 

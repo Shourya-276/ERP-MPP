@@ -13,21 +13,38 @@ interface AddRevisitModalProps {
 }
 
 export const AddRevisitModal: React.FC<AddRevisitModalProps> = ({ open, onOpenChange }) => {
-    const [step, setStep] = useState<'search' | 'result'>('search');
-    const [uniqueId, setUniqueId] = useState('');
+    const [step, setStep] = useState<'search' | 'select' | 'result'>('search');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [lead, setLead] = useState<any>(null);
 
     const handleSearch = async () => {
-        if (!uniqueId.trim()) return;
+        if (!searchQuery.trim()) return;
 
         setIsLoading(true);
         try {
-            const response = await api.get(`/leads/${uniqueId.toUpperCase()}`);
-            setLead(response.data);
-            setStep('result');
+            // First search with the general search API
+            const response = await api.get(`/leads/search/${searchQuery.trim()}`);
+            const results = response.data;
+
+            if (!results || results.length === 0) {
+                toast.error('No lead found matching your search query');
+                return;
+            }
+
+            if (results.length === 1) {
+                // If single match found, fetch full lead details
+                const leadResponse = await api.get(`/leads/${results[0].friendlyId}`);
+                setLead(leadResponse.data);
+                setStep('result');
+            } else {
+                // If multiple matches, show selection screen
+                setSearchResults(results);
+                setStep('select');
+            }
         } catch (error: any) {
-            toast.error(error.response?.data?.error || 'Lead ID not found');
+            toast.error(error.response?.data?.error || 'Failed to search lead');
         } finally {
             setIsLoading(false);
         }
@@ -35,7 +52,8 @@ export const AddRevisitModal: React.FC<AddRevisitModalProps> = ({ open, onOpenCh
 
     const handleBack = () => {
         setStep('search');
-        setUniqueId('');
+        setSearchQuery('');
+        setSearchResults([]);
         setLead(null);
     };
 
@@ -49,7 +67,8 @@ export const AddRevisitModal: React.FC<AddRevisitModalProps> = ({ open, onOpenCh
             // Reset for next time
             setTimeout(() => {
                 setStep('search');
-                setUniqueId('');
+                setSearchQuery('');
+                setSearchResults([]);
                 setLead(null);
             }, 300);
         } catch (error: any) {
@@ -70,31 +89,74 @@ export const AddRevisitModal: React.FC<AddRevisitModalProps> = ({ open, onOpenCh
                     {step === 'search' ? (
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <Label htmlFor="uniqueId" className="text-sm font-medium text-gray-700">
-                                    Enter Unique ID<span className="text-red-500">*</span>
+                                <Label htmlFor="searchQuery" className="text-sm font-medium text-gray-700">
+                                    Search Customer<span className="text-red-500">*</span>
                                 </Label>
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <Input
-                                        id="uniqueId"
-                                        placeholder="e.g., LEAD-0001"
-                                        value={uniqueId}
-                                        onChange={(e) => setUniqueId(e.target.value)}
-                                        className="pl-10 bg-white border-gray-200 h-11 uppercase"
+                                        id="searchQuery"
+                                        placeholder="Enter Unique ID, Name or Phone"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="pl-10 bg-white border-gray-200 h-11"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') handleSearch();
                                         }}
                                     />
                                 </div>
-                                <p className="text-xs text-gray-500">Search for an existing Lead ID (e.g., LEAD-0001)</p>
+                                <p className="text-xs text-gray-500">Search by Lead ID, Customer Name or Phone number</p>
                             </div>
 
                             <Button
                                 className="w-full h-12 bg-[#2E1A47] hover:bg-[#1e1131] text-white text-base font-medium rounded-xl disabled:opacity-50"
                                 onClick={handleSearch}
-                                disabled={!uniqueId.trim() || isLoading}
+                                disabled={!searchQuery.trim() || isLoading}
                             >
                                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Search Customer'}
+                            </Button>
+                        </div>
+                    ) : step === 'select' ? (
+                        <div className="space-y-4">
+                            <p className="text-sm font-medium text-gray-700">Multiple matching customers found:</p>
+                            <div className="space-y-2 max-h-[200px] overflow-y-auto border border-gray-100 rounded-lg p-2 bg-gray-50">
+                                {searchResults.map((result) => (
+                                    <button
+                                        key={result.friendlyId}
+                                        onClick={async () => {
+                                            setIsLoading(true);
+                                            try {
+                                                const leadResponse = await api.get(`/leads/${result.friendlyId}`);
+                                                setLead(leadResponse.data);
+                                                setStep('result');
+                                            } catch (error: any) {
+                                                toast.error('Failed to load lead details');
+                                            } finally {
+                                                setIsLoading(false);
+                                            }
+                                        }}
+                                        disabled={isLoading}
+                                        className="w-full text-left p-3 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200 rounded-lg flex items-center justify-between transition-all"
+                                    >
+                                        <div>
+                                            <div className="font-bold text-[#4A1D59]">{result.friendlyId}</div>
+                                            <div className="text-gray-900 font-medium text-sm">{result.customerName}</div>
+                                        </div>
+                                        <div className="text-gray-500 text-xs">
+                                            {result.phone ? `******${result.phone.slice(-4)}` : ''}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            <Button
+                                variant="secondary"
+                                className="w-full h-11 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                onClick={() => {
+                                    setStep('search');
+                                    setSearchResults([]);
+                                }}
+                            >
+                                Back to Search
                             </Button>
                         </div>
                     ) : (

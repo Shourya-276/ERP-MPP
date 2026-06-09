@@ -12,6 +12,9 @@ import ThankYouStep from './steps/ThankYouStep';
 import { translations, Language } from './translations';
 import api from '@/lib/api';
 import { toast } from 'sonner';
+import { addToQueue } from '@/lib/offlineLeadQueue';
+import { useNetworkStatus } from '@/contexts/NetworkStatusContext';
+import OfflineStatusBanner from '@/components/OfflineStatusBanner';
 
 const getTodayDateString = () => {
     const today = new Date();
@@ -24,6 +27,7 @@ const getTodayDateString = () => {
 const NewLeadForm: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { refreshPendingCount } = useNetworkStatus();
 
     const [currentStep, setCurrentStep] = useState(1);
     const [language, setLanguage] = useState<Language>('en');
@@ -54,6 +58,7 @@ const NewLeadForm: React.FC = () => {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isOfflineSave, setIsOfflineSave] = useState(false);
 
     const t = translations[language];
 
@@ -84,6 +89,31 @@ const NewLeadForm: React.FC = () => {
         setCurrentStep((prev) => Math.max(prev - 1, 1));
     };
 
+    /** Reset form completely so the receptionist can start a new enquiry */
+    const resetForm = () => {
+        setFormData({
+            firstName: '',
+            lastName: '',
+            middleName: '',
+            email: '',
+            phone: '',
+            gender: '',
+            age: '',
+            nationality: '',
+            aadhar: '',
+            maritalStatus: '',
+            dob: getTodayDateString(),
+            occupation: '',
+            city: '',
+            source: 'WALK_IN',
+            purpose: 'Site Visit',
+            friendlyId: '',
+        });
+        setIsOfflineSave(false);
+        setIsSubmitting(false);
+        setCurrentStep(1);
+    };
+
     const submitForm = async (finalData?: any) => {
         setIsSubmitting(true);
         try {
@@ -91,11 +121,34 @@ const NewLeadForm: React.FC = () => {
             const dataToSubmit = finalData ? { ...formData, ...finalData } : formData;
             const response = await api.post('/leads', dataToSubmit);
             updateData({ friendlyId: response.data.lead.friendlyId });
+            setIsOfflineSave(false);
             setCurrentStep(5); // Show Thank You
             toast.success('Lead created successfully!');
         } catch (error: any) {
             console.error('Submission error:', error);
-            toast.error(error.response?.data?.error || 'Failed to save lead');
+
+            // Network error (no response) or server/database down (5xx)
+            const isOfflineError = !error.response || error.response.status >= 500;
+
+            if (isOfflineError) {
+                try {
+                    const dataToSubmit = finalData ? { ...formData, ...finalData } : formData;
+                    const offlineId = await addToQueue(dataToSubmit);
+                    updateData({ friendlyId: `OFFLINE-${offlineId.slice(0, 6).toUpperCase()}` });
+                    setIsOfflineSave(true);
+                    setCurrentStep(5);
+                    await refreshPendingCount();
+                    toast.success('Lead saved offline. It will sync automatically when connected.', {
+                        duration: 6000,
+                    });
+                } catch (offlineErr) {
+                    console.error('Failed to save offline:', offlineErr);
+                    toast.error('Failed to save lead. Please try again.');
+                }
+            } else {
+                // Server responded with a validation error (e.g. duplicate phone) — do NOT save offline
+                toast.error(error.response?.data?.error || 'Failed to save lead');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -105,6 +158,7 @@ const NewLeadForm: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
+            <OfflineStatusBanner />
             <header className="bg-[#4A1D59] py-6 px-8 text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)]"></div>
                 <div className="w-full flex justify-between items-center relative z-10">
@@ -231,7 +285,7 @@ const NewLeadForm: React.FC = () => {
                             isSubmitting={isSubmitting}
                         />
                     )}
-                    {currentStep === 5 && <ThankYouStep language={language} leadId={formData.friendlyId} />}
+                    {currentStep === 5 && <ThankYouStep language={language} leadId={formData.friendlyId} isOffline={isOfflineSave} onNewForm={resetForm} />}
                 </div>
             </main>
         </div>
