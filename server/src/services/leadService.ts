@@ -205,10 +205,10 @@ export class LeadService {
         const leads = await (prisma.lead as any).findMany({
             where: {
                 OR: [
-                    { friendlyId: { contains: searchQuery } },
-                    ...(isNumeric ? [{ friendlyId: { contains: searchQuery.padStart(4, '0') } }] : []),
-                    { customerName: { contains: searchQuery } },
-                    { phone: { contains: searchQuery } }
+                    { friendlyId: { contains: searchQuery, mode: 'insensitive' } },
+                    ...(isNumeric ? [{ friendlyId: { contains: searchQuery.padStart(4, '0'), mode: 'insensitive' } }] : []),
+                    { customerName: { contains: searchQuery, mode: 'insensitive' } },
+                    { phone: { contains: searchQuery, mode: 'insensitive' } }
                 ]
             },
             take: 10,
